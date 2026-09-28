@@ -1,0 +1,171 @@
+(*a) = 2;
+var ident = 2;
+
+
+type MyStruct = struct {};
+type func_alias = fn(i32) -> void;
+
+comptime my_func = fn() {};
+
+type
+- struct
+- enum
+- flag
+
+// variables
+const
+var
+comptime
+
+type complex = fn(i32, i32, i32) -> void;
+comptime my_func = fn(i32, b: i32, i32) -> void { print b; };
+
+comptime my_func : ALIAS = fn(a: i32, b: char8) -> void {}
+
+type compare = fn(lhs: i32, rhs: i32);
+
+compime my_func = fn() -> i32 {
+    var a = {
+        var b = 10;
+        42 + b
+
+        return 42 + b;
+    }
+}
+
+var array: i32[]     []i32
+
+
+type school = enum {
+    UMB,
+    NorthEastern,
+}
+
+var my_enum_val: my_enum = school::UMB;
+
+// TODO: Initialization statement (arrays and in general)
+// TODO: Const pointers and array types
+// TODO: imports and exports
+// TODO: range syntax
+
+[]*(fn() -> void )
+
+const my_func = fn() -> i32 { 1 }
+const my_func2 = fn() ->i32 { 2 }
+
+const alias: fn() -> i32 = my_func;
+alias = my_func2 // not allowed
+
+var ptr: *(fn() -> i32) = &my_func;
+ptr = &my_func2; // allowed
+
+
+
+-----------------------------------
+-----------------------------------
+-----------------------------------
+
+------------------------
+--- Compilation Unit ---
+------------------------
+compilationUnit ::= 
+    { declaration }
+
+------------------
+--- Expression ---
+------------------
+// TODO: utf-8 character literals etc.
+
+functionExpression ::= functionTypeExpression blockExpression
+
+nonReturnStatement ::= xyz SEMI // TODO: All operations and stuff in here.
+
+returnStatement ::= RETURN expression SEMI
+
+blockExpression ::= LEFT_BRACE {nonReturnStatement} [ returnStatement | expression ] RIGHT_BRACE // TODO
+
+parExpression ::= LEFT_PAREN expression RIGHT_PAREN
+
+ifExpression ::= IF parExpression blockExpression { ELSE IF parExpression blockExpression } [ ELSE blockExpression ]
+
+valueExpression ::= INT_LITERAL | FLOAT_LITERAL | STRING_LITERAL | CHAR_LITERAL
+
+arrayInitExpression ::= // TODO: Later
+
+structInitExpression ::= // TOOD: Later
+
+expression ::= blockExpression
+             | functionExpression
+             | valueExpression // base case of expression.
+             | ifExpression
+             | parExpression
+             | arrayInitExpression
+             | structInitExpression
+
+
+-------------
+--- TYPES ---
+-------------
+
+// TODO vector and matrix
+intrinsicTypeExpression ::= VOID
+                          | BOOL
+                          | F32 | F64
+                          | U8 | I8 | U16 | I16 | U32 | I32 | U64 | I64
+                          | CHAR8 | CHAR16 | CHAR32
+
+emptyStructExpression ::= STRUCT {};
+structExpression ::= emptyStructExpression | 
+                    ( STRUCT LEFT_BRACE 
+                            [ PUB ] identifier COLON typeExpression { COMMA [ PUB ] identifier COLON typeExpression } [ COMMA ] 
+                        RIGHT_BRACE )
+
+------------------------------------------------------------------------------------------
+anonymousTypeExpression ::= structExpression
+                          | enumExpression // TODO
+                          | flagExpression // TODO
+------------------------------------------------------------------------------------------
+
+functionParameter      ::= [ IDENTIFIER COLON ] typeExpression 
+functionParameters     ::= functionParameter { COMMA functionParameter }
+functionTypeExpression ::= FN LEFT_PAREN [ functionParameters ] RIGHT_PAREN
+
+pointerTypeExpression ::= STAR ( 
+                            ( LEFT_PAREN functionTypeExpression RIGHT_PAREN ) | 
+                            nonFunctionTypeExpression
+                        )
+
+arrayTypeExpression ::= LEFT_BRACKET RIGHT_BRACKET ( 
+                            ( LEFT_PAREN functionTypeExpression RIGHT_PAREN ) | 
+                            nonFunctionTypeExpression
+                        )
+
+nonFunctionTypeExpression ::= IDENTIFIER
+                            | intrinsicTypeExpression 
+                            | pointerTypeExpression // TODO
+                            | arrayTypeExpression // TODO
+
+nonAnonymousTypeExpression ::= nonFunctionTypeExpression | functionTypeExpression
+
+typeExpression ::= nonAnonymousTypeExpression 
+                 | anonymousTypeExpression
+
+-------------
+--- DECL ---
+-------------
+
+mutability ::= const | var | comptime
+
+varDecl ::=
+    [ PUB ] mutability identifier [ COLON typename ] EQ expression SEMI
+
+typeDecl ::=
+    [ PUB ] TYPE identifier EQ typeExpression
+
+declaration ::= varDecl
+              | typeDecl
+
+
+
+
+

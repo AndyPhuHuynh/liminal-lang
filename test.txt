@@ -1,0 +1,52 @@
+const std = @import("std");
+
+const whatever = struct {
+    value: i32,
+    pub fn init() whatever {
+        const result = whatever{.value = 42};
+        return result;
+    }
+};
+
+interface Allocator {
+    new
+    uninit
+}
+
+complex_type = 
+    | array
+    | function
+
+type =
+    | basic_type
+    | (complex_type)
+
+
+comptime actual = fn (a: i32, b: i32, num_to_print: i32) -> bool {
+
+    // lambda with capture
+    const lambda = fn (a: i32, b: i32) [&num_to_print] -> bool {
+        std::print(num_to_print);
+        return a == b;
+    }
+
+    return a == b;
+}
+
+// pointer needs to be const NOT comptime because of captures
+const func_ptr: *(fn (i32, i32) -> bool) = &actual;
+
+// alias
+comptime func_type: fn (i32, i32) -> bool = actual;
+
+pub fn main() !void {
+    _ = whatever.init();
+
+    std::heap::new(whatever.init());
+    std::heap::uninit(size);
+    std::heap::free()
+
+    const x: i32 = (42 @as i32) @as u64;
+    const x: i32 = (42 @as i32) @bitcast *u64;
+    const x: i32 = @as(u64, @as(i32, 42));
+}

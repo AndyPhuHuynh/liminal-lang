@@ -1,0 +1,171 @@
+--------------------------------
+Reserved Words
+--------------------------------
+AND          ::= "and"
+BREAK        ::= "break"
+COMPTIME     ::= "comptime"
+CONST        ::= "const"
+CONTINUE     ::= “continue”
+DO           ::= "do"
+ELSE         ::= “else”
+ENUM         ::= "enum"
+FLAG         ::= "flag"
+FN           ::= "fn"
+FOR          ::= "for"
+IF           ::= “if”
+IN           ::= "in"
+LOOP         ::= “???”
+OR           ::= "or"
+PUB          ::= "pub"
+RETURN       ::= "return"
+SIZEOF       ::= "sizeof"
+STRUCT       ::= "struct"
+SWITCH       ::= "switch"
+TYPE         ::= "type"
+UNION        ::= "union"
+VAR          ::= "var"
+VEC          ::= "vec" MAYBE
+VOLATILE     ::= "volatile" MAYBE
+WHILE        ::= “while”
+
+F32 ::= “f32”
+F64 ::= “f64”
+F80 ::= maybe
+
+U8 ::= “u8”
+I8 ::= “i8”;
+U16 ::= “u16”
+I16 ::= “i16”
+U16 ::= “u16”
+I32 ::= “i32”
+U64 ::= “u64”
+I64 ::= “i64”
+
+BOOL   ::= "bool"
+CHAR8  ::= "char8"
+CHAR16 ::= "char16"
+CHAR32 ::= "char32"
+VOID   ::= "void"
+
+--------------------------------
+Punctuation
+--------------------------------
+BANG         ::= "!"
+BANG_EQ      ::= "!="
+PLUS         ::= "+"
+PLUS_EQ      ::= "+="
+MINUS        ::= "-"
+MINUS_EQ     ::= "-="
+STAR         ::= "*"
+STAR_EQ      ::= "*="
+STAR_STAR    ::= "**"
+STAR_STAR_EQ ::= "**="
+SLASH        ::= "/"
+SLASH_EQ     ::= "/="
+SLASH_DOT    ::= "/."
+SLASH_DOT_EQ ::= "/.="
+PERCENT      ::= "%"
+PERCENT_EQ   ::= "%="
+DOT          ::= "."
+COLON_COLON  ::= "::"
+
+LESS       ::= "<"
+LESS_EQ    ::= "<="
+GREATER    ::= ">"
+GREATER_EQ ::= ">="
+
+TILDE        ::= "~"
+TILDE_EQ     ::= "~="
+PIPE         ::= "|"
+PIPE_EQ      ::= "|="
+AMPERSAND    ::= "&"
+AMPERSAND_EQ ::= "&="
+
+LEFT_SHIFT     ::= "<<"
+LEFT_SHIFT_EQ  ::= "<<="
+RIGHT_SHIFT    ::= ">>"
+RIGHT_SHIFT_EQ ::= ">>="
+
+RANGE_EQ   ::= "..="
+RANGE_LESS ::= "..<"
+
+DEREF        ::= ".*"
+RETURN_ARROW ::= "->"
+SWITCH_ARROW ::= "=>"
+
+COMMA         ::= ","
+SINGLE_QUOTE  ::= "'"
+DOUBLE_QUOTE  ::= '"'
+LEFT_BRACKET  ::= "["
+RIGHT_BRACKET ::= "]"
+LEFT_PAREN    ::= "("
+RIGHT_PAREN   ::= ")"
+LEFT_BRACE    ::= "{"
+RIGHT_BRACE   ::= "}"
+
+--------------------------------
+Literals
+--------------------------------
+HEX_DIGIT     ::= ( "0" ... "9" ) | ( "a" ... "f" ) | ( "A" ... "F" )
+HEX_DIGITS    ::= HEX_DIGIT { HEX_DIGIT }
+DIGIT         ::= ( "0" ... "9" )
+DIGITS        ::= DIGIT { DIGIT }
+EXPONENT      ::= ( "e" | "E" ) [ ( "+" | "-" ) ] DIGITS
+INT_LITERAL   ::=  DIGITS { ["'"] DIGITS }
+                | "0x" HEX_DIGITS { [ "'" ] HEX_DIGITS }
+FLOAT_LITERAL ::= [ INT_LITERAL ] "." INT_LITERAL [ EXPONENT ]
+                | INT_LITERAL "." [ INT_LITERAL ] [ EXPONENT ]
+
+ESC_SEQUENCE   ::= "\\" ( "n" | "r" | "t" | "b" | "f" | "’" | "\"" | "\\" )
+STRING_LITERAL ::= "\"" { ESC_SEQUENCE | ~( "\"" | "\\" | "\n" | "\r" ) } "\""
+CHAR_LITERAL   ::= "’" ( ESC_SEQUENCE | ~( "’" | "\n" | "\r" | "\\" ) ) "’"
+
+NON_DIGIT           ::= _ | ( "a" ... "z" ) | ( "A" ... "Z" )
+IDENTIFIER_START    ::= NON_DIGIT | XID_START
+IDENTIFIER_CONTINUE ::= DIGIT | NON_DIGIT | XID_CONTINUE
+IDENTIFER           ::= IDENTIFIER_START { IDENTIFIER_CONTINUE }
+
+EOF ::= "<end of file>"
+
+
+
+
+TYPE_DECL = TYPE ident EQUAL type_specifier;
+type array = std::array;
+
+type MyStruct = struct {
+
+}
+
+type MyFlag = flag: i32 {
+
+}
+
+type MyUnion = enum {
+    thing1: void,
+    thing2: i32
+}
+
+interface Printfable = {
+    fn format(self) -> string;
+}
+
+interface Format = {
+    fn format(self) -> const char *;
+}
+
+enum {
+    Format : format
+    Format2 : format2
+}
+
+fn (i32, i32...) {
+    foreach ... {
+        match ... {
+            Format -> get string
+            Foramt2 -> chat char *
+        }
+    }
+}
+
+100000000
