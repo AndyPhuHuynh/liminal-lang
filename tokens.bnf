@@ -1,6 +1,6 @@
---------------------------------
-Reserved Words
---------------------------------
+# --------------------------------
+# Reserved Words
+# --------------------------------
 AND          ::= "and"
 BREAK        ::= "break"
 COMPTIME     ::= "comptime"
@@ -14,7 +14,7 @@ FN           ::= "fn"
 FOR          ::= "for"
 IF           ::= “if”
 IN           ::= "in"
-LOOP         ::= “???”
+LOOP         ::= “loop”
 OR           ::= "or"
 PUB          ::= "pub"
 RETURN       ::= "return"
@@ -22,10 +22,11 @@ SIZEOF       ::= "sizeof"
 STRUCT       ::= "struct"
 SWITCH       ::= "switch"
 TYPE         ::= "type"
+UNDEFINED    ::= "undefined"
 UNION        ::= "union"
 VAR          ::= "var"
-VEC          ::= "vec" MAYBE
-VOLATILE     ::= "volatile" MAYBE
+VEC          ::= "vec" # VEC and VOLATILE possibly to be removed.
+VOLATILE     ::= "volatile"
 WHILE        ::= “while”
 
 F32 ::= “f32”
@@ -47,9 +48,10 @@ CHAR16 ::= "char16"
 CHAR32 ::= "char32"
 VOID   ::= "void"
 
---------------------------------
-Punctuation
---------------------------------
+
+# --------------------------------
+# Punctuation
+# --------------------------------
 BANG         ::= "!"
 BANG_EQ      ::= "!="
 PLUS         ::= "+"
@@ -103,9 +105,9 @@ RIGHT_PAREN   ::= ")"
 LEFT_BRACE    ::= "{"
 RIGHT_BRACE   ::= "}"
 
---------------------------------
-Literals
---------------------------------
+# --------------------------------
+# Literals
+# --------------------------------
 HEX_DIGIT     ::= ( "0" ... "9" ) | ( "a" ... "f" ) | ( "A" ... "F" )
 HEX_DIGITS    ::= HEX_DIGIT { HEX_DIGIT }
 DIGIT         ::= ( "0" ... "9" )
@@ -126,46 +128,3 @@ IDENTIFIER_CONTINUE ::= DIGIT | NON_DIGIT | XID_CONTINUE
 IDENTIFER           ::= IDENTIFIER_START { IDENTIFIER_CONTINUE }
 
 EOF ::= "<end of file>"
-
-
-
-
-TYPE_DECL = TYPE ident EQUAL type_specifier;
-type array = std::array;
-
-type MyStruct = struct {
-
-}
-
-type MyFlag = flag: i32 {
-
-}
-
-type MyUnion = enum {
-    thing1: void,
-    thing2: i32
-}
-
-interface Printfable = {
-    fn format(self) -> string;
-}
-
-interface Format = {
-    fn format(self) -> const char *;
-}
-
-enum {
-    Format : format
-    Format2 : format2
-}
-
-fn (i32, i32...) {
-    foreach ... {
-        match ... {
-            Format -> get string
-            Foramt2 -> chat char *
-        }
-    }
-}
-
-100000000
