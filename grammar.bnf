@@ -10,19 +10,18 @@
 # ------------------------
 # --- Compilation Unit ---
 # ------------------------
-compilationUnit ::= 
-    { declaration }
+compilationUnit ::= { declaration }
 
 # ------------------
 # --- Expression ---
 # ------------------ 
 functionExpression ::= functionTypeExpression blockExpression
 
-nonReturnStatement ::= xyz SEMI
+nonReturnStatement ::= unimplemented SEMI
 
 returnStatement ::= RETURN expression SEMI
 
-blockExpression ::= LEFT_BRACE {nonReturnStatement} [ returnStatement | expression ] RIGHT_BRACE // TODO
+blockExpression ::= LEFT_BRACE {nonReturnStatement} [ returnStatement | expression ] RIGHT_BRACE
 
 parExpression ::= LEFT_PAREN expression RIGHT_PAREN
 
@@ -36,7 +35,7 @@ structInitExpression ::= unimplemented
 
 expression ::= blockExpression
              | functionExpression
-             | valueExpression // base case of expression.
+             | valueExpression # base case of expression.
              | ifExpression
              | parExpression
              | arrayInitExpression
@@ -51,15 +50,17 @@ intrinsicTypeExpression ::= VOID
                           | U8 | I8 | U16 | I16 | U32 | I32 | U64 | I64
                           | CHAR8 | CHAR16 | CHAR32
 
-emptyStructExpression ::= STRUCT {};
-structExpression ::= emptyStructExpression | 
-                    ( STRUCT LEFT_BRACE 
-                            [ PUB ] identifier COLON typeExpression { COMMA [ PUB ] identifier COLON typeExpression } [ COMMA ] 
-                        RIGHT_BRACE )
+emptyStructExpression ::= STRUCT LEFT_BRACE RIGHT_BRACE
+structMember          ::= [ PUB ] identifier COLON typeExpression
+structExpression      ::= emptyStructExpression 
+                        | ( STRUCT LEFT_BRACE 
+                                structMember { COMMA structMember } [ COMMA ] 
+                            RIGHT_BRACE )
 
+# TODO: enumExpression and flagExpression
 anonymousTypeExpression ::= structExpression
-                          | enumExpression // TODO
-                          | flagExpression // TODO
+                          | enumExpression
+                          | flagExpression
 
 functionParameter      ::= [ IDENTIFIER COLON ] typeExpression 
 functionParameters     ::= functionParameter { COMMA functionParameter }
@@ -77,8 +78,8 @@ arrayTypeExpression ::= LEFT_BRACKET RIGHT_BRACKET (
 
 nonFunctionTypeExpression ::= IDENTIFIER
                             | intrinsicTypeExpression 
-                            | pointerTypeExpression // TODO
-                            | arrayTypeExpression // TODO
+                            | pointerTypeExpression
+                            | arrayTypeExpression
 
 nonAnonymousTypeExpression ::= nonFunctionTypeExpression | functionTypeExpression
 
