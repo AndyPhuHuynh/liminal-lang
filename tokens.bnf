@@ -34,7 +34,7 @@ F64 ::= “f64”
 F80 ::= maybe
 
 U8 ::= “u8”
-I8 ::= “i8”;
+I8 ::= “i8”
 U16 ::= “u16”
 I16 ::= “i16”
 U16 ::= “u16”
@@ -113,7 +113,7 @@ HEX_DIGITS    ::= HEX_DIGIT { HEX_DIGIT }
 DIGIT         ::= ( "0" ... "9" )
 DIGITS        ::= DIGIT { DIGIT }
 EXPONENT      ::= ( "e" | "E" ) [ ( "+" | "-" ) ] DIGITS
-INT_LITERAL   ::=  DIGITS { ["'"] DIGITS }
+INT_LITERAL   ::=  DIGITS { [ "'" ] DIGITS }
                 | "0x" HEX_DIGITS { [ "'" ] HEX_DIGITS }
 FLOAT_LITERAL ::= [ INT_LITERAL ] "." INT_LITERAL [ EXPONENT ]
                 | INT_LITERAL "." [ INT_LITERAL ] [ EXPONENT ]
@@ -127,4 +127,4 @@ IDENTIFIER_START    ::= NON_DIGIT | XID_START
 IDENTIFIER_CONTINUE ::= DIGIT | NON_DIGIT | XID_CONTINUE
 IDENTIFER           ::= IDENTIFIER_START { IDENTIFIER_CONTINUE }
 
-EOF ::= "<end of file>"
+EOF ::= <EOF>

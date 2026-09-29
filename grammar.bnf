@@ -21,7 +21,7 @@ nonReturnStatement ::= unimplemented SEMI
 
 returnStatement ::= RETURN expression SEMI
 
-blockExpression ::= LEFT_BRACE {nonReturnStatement} [ returnStatement | expression ] RIGHT_BRACE
+blockExpression ::= LEFT_BRACE { nonReturnStatement } [ returnStatement | expression ] RIGHT_BRACE
 
 parExpression ::= LEFT_PAREN expression RIGHT_PAREN
 
