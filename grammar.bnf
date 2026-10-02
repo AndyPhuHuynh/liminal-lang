@@ -12,14 +12,57 @@
 # ------------------------
 compilationUnit ::= { declaration }
 
-# ------------------
-# --- Expression ---
-# ------------------ 
-functionExpression ::= functionTypeExpression blockExpression
+# -----------------
+# --- Statement ---
+# -----------------
 
-nonReturnStatement ::= unimplemented SEMI
+assignmentStatement ::= unaryExpression PLUS_EQ expression       
+                      | unaryExpression MINUS_EQ expression      
+                      | unaryExpression STAR_EQ expression
+                      | unaryExpression STAR_STAR_EQ expression
+                      | unaryExpression SLASH_EQ expression
+                      | unaryExpression PERCENT_EQ expression
+                      | unaryExpression CARE_EQ expression   
+                      | unaryExpression TILDE_EQ expression
+                      | unaryExpression PIPE_EQ expression
+                      | unaryExpression AMPERSAND_EQ expression
+                      | unaryExpression LEFT_SHIFT_EQ  expression
+                      | unaryExpression RIGHT_SHIFT_EQ expression
+
+controlFlowStopStatement ::= ( BREAK | CONTINUE ) SEMI
+
+doLoop ::= DO blockExpression WHILE parExpression SEMI
+
+emptyStatement ::= SEMI
+
+expressionStatement ::= expression SEMI
+
+forLoop ::= unimplemented
+
+loopLoop ::= LOOP blockExpression
+
+whileLoop ::= WHILE parExpression blockExpression
+
+nonReturnStatement ::= varDecl 
+                     | typeDecl  
+                     | controlFlowStopStatement
+                     | doLoop
+                     | emptyStatement
+                     | expressionStatement 
+                     | forLoop
+                     | loopLoop
+                     | whileLoop
 
 returnStatement ::= RETURN expression SEMI
+
+# ------------------
+# --- Expression ---
+# ------------------
+
+functionCaptureGroup ::= LEFT_BRACKET { [ REF | EQ ] IDENTIFIER COMMA } [ REF | EQ ] IDENTIFIER RIGHT_BRACKET
+
+functionValueExpression ::= FN LEFT_PAREN [ functionParameters ] RIGHT_PAREN 
+    [ functionCaptureGroup ] RETURN_ARROW typeExpression blockExpression
 
 blockExpression ::= LEFT_BRACE { nonReturnStatement } [ returnStatement | expression ] RIGHT_BRACE
 
@@ -27,19 +70,100 @@ parExpression ::= LEFT_PAREN expression RIGHT_PAREN
 
 ifExpression ::= IF parExpression blockExpression { ELSE IF parExpression blockExpression } [ ELSE blockExpression ]
 
-valueExpression ::= INT_LITERAL | FLOAT_LITERAL | STRING_LITERAL | CHAR_LITERAL
+valueExpression ::= INT_LITERAL | FLOAT_LITERAL | STRING_LITERAL | CHAR_LITERAL | TRUE | FALSE | NULL | IDENTIFIER
 
 arrayInitExpression ::= unimplemented
 
 structInitExpression ::= unimplemented
 
-expression ::= blockExpression
-             | functionExpression
-             | valueExpression # base case of expression.
-             | ifExpression
-             | parExpression
-             | arrayInitExpression
-             | structInitExpression
+baseExpression (Zero) ::= blockExpression
+                 | functionValueExpression
+                 | valueExpression # base case of expression.
+                 | ifExpression
+                 | parExpression
+                 | arrayInitExpression
+                 | structInitExpression
+
+arrayAccessExpression ::= postFixExpression LEFT_BRACKET expression RIGHT_BRACKET
+
+functionCallExpression ::= postFixExpression LEFT_PAREN [ expression { COMMA expression } ]  RIGHT_PAREN
+
+fieldAccessExpression ::= postFixExpression DOT identifier
+
+scopeResolutionExpression ::= postFixExpression COLON_COLON identifier
+
+postFixExpresion (One) ::= baseExpression
+                         | arrayAccessExpression
+                         | functionCallExpression
+                         | fieldAccessExpression
+                         | scopeResolutionExpression
+
+addressExpression ::= AMPERSAND unaryExpression
+
+alignExpression ::= ALIGN unaryExpression
+
+complementExpression ::= TILDE unaryExpression
+
+dereferenceExpression ::= STAR unaryExpression
+
+negationExpression ::= MINUS unaryExpression
+
+notExpression ::= BANG unaryExpression
+
+referenceExpression ::= REF unaryExpression
+
+unaryExpression (Two) ::= postFixExpression
+                        | addressExpression
+                        | alignExpression
+                        | complementExpression
+                        | dereferenceExpression
+                        | negationExpression
+                        | notExpression
+                        | referenceExpression
+                        | sizeOfExpression
+
+exponentExpression (Three) ::= unaryExpression
+                             | exponentExpression STAR_STAR unaryExpression
+
+multiplicativeExpression (Four) ::= exponentExpression
+                                  | multiplicativeExpression STAR exponentExpression
+                                  | multiplicativeExpression SLASH exponentExpression
+                                  | multiplicativeExpression PERCENT exponentExpression
+
+additiveExpression (Five) ::= multiplicativeExpression
+                            | additiveExpression PLUS multiplicativeExpression 
+                            | additiveExpression MINUS multiplicativeExpression
+
+shiftExpression (Six) ::= additiveExpression
+                        | shiftExpression LEFT_SHIFT additiveExpression
+                        | shiftExpression RIGHT_SHIFT additiveExpression
+
+relationalExpression (Seven) ::= shiftExpression
+                               | relationalExpression LESS shiftExpression
+                               | relationalExpression LESS_EQ shiftExpression
+                               | relationalExpression GREATER shiftExpression
+                               | relationalExpression GREATER_EQ shiftExpression
+
+equalityExpression (Eight) ::= relationalExpression
+                             | equalityExpression EQ_EQ relationalExpression
+                             | equalityExpression BANG_EQ relationalExpression
+
+bitwiseAndExpression (Nine) ::= equalityExpression
+                              | bitwiseAndExpression AMPERSAND equalityExpression
+
+bitwiseXORExpression (Ten) ::= bitwiseAndExpression
+                             | bitwiseXORExpression CARET bitwiseAndExpression
+
+bitwiseOrExpression (Eleven) ::= bitwiseXORExpression
+                               | bitwiseOrxpression PIPE bitwiseXORExpression
+
+logicalAndExpression (Twelve) ::= bitwiseOrExpression
+                                | logicalAndExpression AND bitwiseOrExpression
+
+logicalOrExpression (Twelve) ::= logicalAndExpression
+                               | logicalOrExpression OR logicalAndExpression
+
+expression ::= logicalOrExpression
 
 # -------------
 # --- TYPES ---
@@ -76,10 +200,13 @@ arrayTypeExpression ::= LEFT_BRACKET RIGHT_BRACKET (
                             nonFunctionTypeExpression
                         )
 
+referenceTypeExpression ::= REF nonFunctionTypeExpresson
+
 nonFunctionTypeExpression ::= IDENTIFIER
                             | intrinsicTypeExpression 
                             | pointerTypeExpression
                             | arrayTypeExpression
+                            | referenceTypeExpression
 
 nonAnonymousTypeExpression ::= nonFunctionTypeExpression | functionTypeExpression
 
@@ -90,13 +217,13 @@ typeExpression ::= nonAnonymousTypeExpression
 # -------------
 # --- DECL ---
 # -------------
-mutability ::= const | var | comptime
+mutability ::= CONST | VAR | COMPTIME
 
 varDecl ::=
     [ PUB ] mutability identifier [ COLON typename ] EQ ( expression | UNDEFINED ) SEMI
 
 typeDecl ::=
-    [ PUB ] TYPE identifier EQ typeExpression
+    [ PUB ] TYPE identifier EQ typeExpression SEMI
 
 declaration ::= varDecl
               | typeDecl
