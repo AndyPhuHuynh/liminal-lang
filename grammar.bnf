@@ -6,6 +6,7 @@
 # TODO: All operations and in nonReturnStatement. 
 # TODO: array and struct implementations.
 # TODO: vectors and matrices.
+# TODO: slice array syntax
 
 # ------------------------
 # --- Compilation Unit ---
@@ -15,7 +16,6 @@ compilationUnit ::= { declaration }
 # -----------------
 # --- Statement ---
 # -----------------
-
 assignmentStatement ::= unaryExpression PLUS_EQ expression       
                       | unaryExpression MINUS_EQ expression      
                       | unaryExpression STAR_EQ expression
@@ -58,7 +58,6 @@ returnStatement ::= RETURN expression SEMI
 # ------------------
 # --- Expression ---
 # ------------------
-
 functionCaptureGroup ::= LEFT_BRACKET { [ REF | EQ ] IDENTIFIER COMMA } [ REF | EQ ] IDENTIFIER RIGHT_BRACKET
 
 functionValueExpression ::= FN LEFT_PAREN [ functionParameters ] RIGHT_PAREN 
@@ -72,7 +71,7 @@ ifExpression ::= IF parExpression blockExpression { ELSE IF parExpression blockE
 
 valueExpression ::= INT_LITERAL | FLOAT_LITERAL | STRING_LITERAL | CHAR_LITERAL | TRUE | FALSE | NULL | IDENTIFIER
 
-arrayInitExpression ::= unimplemented
+arrayInitExpression ::= LEFT_BRACKET [ expression { COMMA expression } ] RIGHT_BRACKET
 
 structInitExpression ::= unimplemented
 
@@ -195,7 +194,7 @@ pointerTypeExpression ::= STAR (
                             nonFunctionTypeExpression
                         )
 
-arrayTypeExpression ::= LEFT_BRACKET RIGHT_BRACKET ( 
+arrayTypeExpression ::= LEFT_BRACKET [ expression ] RIGHT_BRACKET ( 
                             ( LEFT_PAREN functionTypeExpression RIGHT_PAREN ) | 
                             nonFunctionTypeExpression
                         )
