@@ -65,23 +65,26 @@ functionValueExpression ::= FN LEFT_PAREN [ functionParameters ] RIGHT_PAREN
 
 blockExpression ::= LEFT_BRACE { nonReturnStatement } [ returnStatement | expression ] RIGHT_BRACE
 
-parExpression ::= LEFT_PAREN expression RIGHT_PAREN
+rangeExpression ::= expression ( RANGE_LESS | RANGE_EQ ) expression
+
+valueExpression ::= INT_LITERAL | FLOAT_LITERAL | STRING_LITERAL | CHAR_LITERAL | TRUE | FALSE | NULL | IDENTIFIER
 
 ifExpression ::= IF parExpression blockExpression { ELSE IF parExpression blockExpression } [ ELSE blockExpression ]
 
-valueExpression ::= INT_LITERAL | FLOAT_LITERAL | STRING_LITERAL | CHAR_LITERAL | TRUE | FALSE | NULL | IDENTIFIER
+parExpression ::= LEFT_PAREN expression RIGHT_PAREN
 
 arrayInitExpression ::= LEFT_BRACKET [ expression { COMMA expression } ] RIGHT_BRACKET
 
 structInitExpression ::= unimplemented
 
 baseExpression (Zero) ::= blockExpression
-                 | functionValueExpression
-                 | valueExpression # base case of expression.
-                 | ifExpression
-                 | parExpression
-                 | arrayInitExpression
-                 | structInitExpression
+                        | functionValueExpression
+                        | rangeExpression
+                        | valueExpression # base case of expression.
+                        | ifExpression
+                        | parExpression
+                        | arrayInitExpression
+                        | structInitExpression
 
 arrayAccessExpression ::= postFixExpression LEFT_BRACKET expression RIGHT_BRACKET
 
