@@ -13,8 +13,9 @@ FALSE        ::= "false"
 FLAG         ::= "flag"
 FN           ::= "fn"
 FOR          ::= "for"
+FOREACH      ::= "foreach"
 IF           ::= “if”
-IN           ::= "in"
+IN           ::= "<-"
 LOOP         ::= “loop”
 NULL         ::= "null"
 OR           ::= "or"
@@ -54,7 +55,8 @@ VOID   ::= "void"
 # --------------------------------
 # Punctuation
 # --------------------------------
-ALIGN        ::= "@alignof"
+ALIGNOF      ::= "@alignof"
+ALIGNAS      ::= "@alignas"
 AS           ::= "@as"
 SIZEOF       ::= "@sizeof"
 
