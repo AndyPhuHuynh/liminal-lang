@@ -5,46 +5,58 @@ AND          ::= "and"
 BREAK        ::= "break"
 COMPTIME     ::= "comptime"
 CONST        ::= "const"
-CONTINUE     ::= “continue”
+CONTINUE     ::= "continue"
 DO           ::= "do"
-ELSE         ::= “else”
+ELSE         ::= "else"
 ENUM         ::= "enum"
 FALSE        ::= "false"
 FLAG         ::= "flag"
 FN           ::= "fn"
 FOR          ::= "for"
 FOREACH      ::= "foreach"
-IF           ::= “if”
+IF           ::= "if"
 IN           ::= "<-"
-LOOP         ::= “loop”
+LOOP         ::= "loop"
+MATCH        ::= "match"
+NORETURN     ::= "noreturn"
 NULL         ::= "null"
 OR           ::= "or"
+PERSIST      ::= "persist"
+PTR          ::= "ptr"
+PTR_VAR      ::= "ptr_var"
+PTR_CONST    ::= "ptr_ref"
 PUB          ::= "pub"
 REF          ::= "ref"
+REF_VAR      ::= "ref_var"
+REF_CONST    ::= "ref_const"
 RETURN       ::= "return"
 STRUCT       ::= "struct"
-SWITCH       ::= "switch"
 TRUE         ::= "true"
 TYPE         ::= "type"
 UNDEFINED    ::= "undefined"
 UNION        ::= "union"
+UNSAFE       ::= "unsafe"
 VAR          ::= "var"
 VEC          ::= "vec" # VEC and VOLATILE possibly to be removed.
 VOLATILE     ::= "volatile"
-WHILE        ::= “while”
+WHILE        ::= "while"
 
-F32 ::= “f32”
-F64 ::= “f64”
-F80 ::= maybe
+F32 ::= "f32"
+F64 ::= "f64"
 
-U8 ::= “u8”
-I8 ::= “i8”
-U16 ::= “u16”
-I16 ::= “i16”
-U16 ::= “u16”
-I32 ::= “i32”
-U64 ::= “u64”
-I64 ::= “i64”
+U8  ::= "u8"
+I8  ::= "i8"
+U16 ::= "u16"
+I16 ::= "i16"
+U16 ::= "u16"
+I32 ::= "i32"
+U64 ::= "u64"
+I64 ::= "i64"
+
+USIZE ::= "usize"
+ISIZE ::= "isize"
+UPTR  ::= "uptr"
+IPTR  ::= "iptr"
 
 BOOL   ::= "bool"
 CHAR8  ::= "char8"
@@ -55,10 +67,12 @@ VOID   ::= "void"
 # --------------------------------
 # Punctuation
 # --------------------------------
-ALIGNOF      ::= "@alignof"
-ALIGNAS      ::= "@alignas"
-AS           ::= "@as"
-SIZEOF       ::= "@sizeof"
+ALIGN_OF ::= "@align_of"
+ALIGN_AS ::= "@align_as"
+AS       ::= "@as"
+IMPORT   ::= "@import"
+INLINE   ::= "@inline"
+SIZE_OF  ::= "@size_of"
 
 # --------------------------------
 # Punctuation
@@ -76,36 +90,36 @@ AMPERSAND_EQ   ::= "&="
 LEFT_SHIFT_EQ  ::= "<<="
 RIGHT_SHIFT_EQ ::= ">>="
 
-LESS_EQ        ::= "<="
-GREATER_EQ     ::= ">="
-EQ_EQ          ::= "=="
-BANG_EQ        ::= "!="
-PLUS         ::= "+"
-MINUS        ::= "-"
-STAR         ::= "*"
-STAR_STAR    ::= "**"
-SLASH        ::= "/"
-PERCENT      ::= "%"
-DOT          ::= "."
-COLON        ::= ":"
-COLON_COLON  ::= "::"
-SEMI         ::= ";"
+LESS_EQ     ::= "<="
+GREATER_EQ  ::= ">="
+EQ_EQ       ::= "=="
+BANG_EQ     ::= "!="
+PLUS        ::= "+"
+MINUS       ::= "-"
+STAR        ::= "*"
+STAR_STAR   ::= "**"
+SLASH       ::= "/"
+PERCENT     ::= "%"
+DOT         ::= "."
+COLON       ::= ":"
+COLON_COLON ::= "::"
+SEMI        ::= ";"
 
-LESS       ::= "<"
-GREATER    ::= ">"
-EQ         ::= "="
-BANG       ::= "!"
+LESS    ::= "<"
+GREATER ::= ">"
+EQ      ::= "="
+BANG    ::= "!"
 
-CARET        ::= "^"
-TILDE        ::= "~"
-PIPE         ::= "|"
-AMPERSAND    ::= "&"
+CARET     ::= "^"
+TILDE     ::= "~"
+PIPE      ::= "|"
+AMPERSAND ::= "&"
 
-LEFT_SHIFT     ::= "<<"
-RIGHT_SHIFT    ::= ">>"
+LEFT_SHIFT  ::= "<<"
+RIGHT_SHIFT ::= ">>"
 
 RANGE_LESS ::= "..<"
-RANGE_EQ       ::= "..="
+RANGE_EQ   ::= "..="
 
 DEREF        ::= ".*"
 RETURN_ARROW ::= "->"
@@ -121,26 +135,44 @@ RIGHT_PAREN   ::= ")"
 LEFT_BRACE    ::= "{"
 RIGHT_BRACE   ::= "}"
 
+UNDERSCORE ::= "_"
+
 # --------------------------------
 # Literals
 # --------------------------------
-HEX_DIGIT     ::= ( "0" ... "9" ) | ( "a" ... "f" ) | ( "A" ... "F" )
-HEX_DIGITS    ::= HEX_DIGIT { HEX_DIGIT }
-DIGIT         ::= ( "0" ... "9" )
-DIGITS        ::= DIGIT { DIGIT }
-EXPONENT      ::= ( "e" | "E" ) [ ( "+" | "-" ) ] DIGITS
-INT_LITERAL   ::=  DIGITS { [ "'" ] DIGITS }
-                | "0x" HEX_DIGITS { [ "'" ] HEX_DIGITS }
-FLOAT_LITERAL ::= [ INT_LITERAL ] "." INT_LITERAL [ EXPONENT ]
-                | INT_LITERAL "." [ INT_LITERAL ] [ EXPONENT ]
+INT_SUFFIX    ::= U8 | I8 | U16 | I16 | U32 | I32 | U64 | I64 | USIZE | ISIZE | UPTR | IPTR
+FLOAT_SUFFIX  ::= F32 | F64
 
-ESC_SEQUENCE   ::= "\\" ( "n" | "r" | "t" | "b" | "f" | "’" | "\"" | "\\" )
+BINARY_DIGIT  ::= "0" | "1"
+BINARY_DIGITS ::= BINARY_DIGIT { BINARY_DIGIT }
+
+OCTAL_DIGIT  ::= ( "0" ... "7" )
+OCTAL_DIGITS ::= OCTAL_DIGIT { OCTAL_DIGIT }
+
+HEX_DIGIT  ::= ( "0" ... "9" ) | ( "a" ... "f" ) | ( "A" ... "F" )
+HEX_DIGITS ::= HEX_DIGIT { HEX_DIGIT }
+
+DIGIT  ::= ( "0" ... "9" )
+DIGITS ::= DIGIT { DIGIT }
+
+EXPONENT ::= ( "e" | "E" ) [ ( "+" | "-" ) ] DIGITS
+
+INT_LITERAL   ::=      DIGITS        { [ "'" ] DIGITS }        [ INT_SUFFIX ]
+                | "0b" BINARY_DIGITS { [ "'" ] BINARY_DIGITS } [ INT_SUFFIX ]
+                | "0o" OCTAL_DIGITS  { [ "'" ] OCTAL_DIGITS }  [ INT_SUFFIX ]
+                | "0x" HEX_DIGITS    { [ "'" ] HEX_DIGITS }    [ INT_SUFFIX ]
+
+FLOAT_LITERAL ::= [ INT_LITERAL ] "." INT_LITERAL [ EXPONENT ] [ FLOAT_SUFFIX ]
+                | INT_LITERAL "." [ INT_LITERAL ] [ EXPONENT ] [ FLOAT_SUFFIX ]
+                | INT_LITERAL [ FLOAT_SUFFIX ]
+
+ESC_SEQUENCE   ::= "\\" ( "n" | "r" | "t" | "b" | "f" | "'" | "\"" | "\\" )
 STRING_LITERAL ::= "\"" { ESC_SEQUENCE | ~( "\"" | "\\" | "\n" | "\r" ) } "\""
-CHAR_LITERAL   ::= "’" ( ESC_SEQUENCE | ~( "’" | "\n" | "\r" | "\\" ) ) "’"
+CHAR_LITERAL   ::= "'" ( ESC_SEQUENCE | ~( "'" | "\n" | "\r" | "\\" ) ) "'"
 
 NON_DIGIT           ::= _ | ( "a" ... "z" ) | ( "A" ... "Z" )
 IDENTIFIER_START    ::= NON_DIGIT | XID_START
 IDENTIFIER_CONTINUE ::= DIGIT | NON_DIGIT | XID_CONTINUE
-IDENTIFER           ::= IDENTIFIER_START { IDENTIFIER_CONTINUE }
+IDENTIFIER          ::= IDENTIFIER_START { IDENTIFIER_CONTINUE }
 
 EOF ::= <EOF>

@@ -1,64 +1,77 @@
-# TODO: Initialization statement (arrays and in general).
 # TODO: Const pointers and array types.
 # TODO: imports and exports.
-# TODO: range syntax.
 # TODO: utf-8 character literals etc.
 # TODO: All operations and in nonReturnStatement. 
-# TODO: array and struct implementations.
 # TODO: vectors and matrices.
 # TODO: slice array syntax
 
 # ------------------------
 # --- Compilation Unit ---
 # ------------------------
-compilationUnit ::= { declaration }
+compilationUnit ::= { importStatement } { declaration }
+
+importStatement ::= CONST IDENTIFIER EQ IMPORT LEFT_PAREN EXPRESSION RIGHT_PAREN SEMI
 
 # -----------------
 # --- Statement ---
 # -----------------
-controlFlowStopStatement ::= ( BREAK | CONTINUE ) SEMI
+breakStatement = BREAK SEMI
 
-doLoop ::= DO loopBlockStatement WHILE parExpression SEMI
+continueStatement = CONTINUE SEMI
 
 emptyStatement ::= SEMI
 
 expressionStatement ::= expression SEMI
 
-forInit ::= varDeclarator EQ expression { COMMA varDeclarator EQ expression }
+returnStatement ::= RETURN expression SEMI
 
-forUpdate ::= expression { COMMA expression }
+# ---------------------------
+# --- Statement --- Loops ---
+# ---------------------------
+loopBlockStatement       ::= LEFT_BRACE { statement } RIGHT_BRACE
+unsafeLoopBlockStatement ::= UNSAFE loopBlockStatement
 
-forLoop ::= FOR LEFT_PAREN [ forInit ] SEMI [ expression ] SEMI [ forUpdate ] RIGHT_PAREN loopBlockStatement
+doLoop ::= DO loopBlockStatement WHILE parExpression SEMI
 
+forInit     ::= varDeclarator EQ expression { COMMA varDeclarator EQ expression }
+forUpdate   ::= expression { COMMA expression }
+forLoop     ::= FOR LEFT_PAREN [ forInit ] SEMI [ expression ] SEMI [ forUpdate ] RIGHT_PAREN loopBlockStatement
 forEachLoop ::= FOREACH LEFT_PAREN varDeclarator IN expression RIGHT_PAREN loopBlockStatement
-
-loopBlockStatement ::= LEFT_BRACE { nonReturnStatement } [ returnStatement ] RIGHT_BRACE
 
 loopLoop ::= LOOP loopBlockStatement
 
 whileLoop ::= WHILE parExpression loopBlockStatement
 
-nonReturnStatement ::= controlFlowStopStatement
-                     | doLoop
-                     | emptyStatement
-                     | forLoop
-                     | loopLoop
-                     | whileLoop
-                     | varDecl 
-                     | typeDecl  
-                     | expressionStatement
+loopStatement ::= doLoop
+                | forLoop
+                | forEachLoop
+                | loopLoop
+                | whileLoop
 
-returnStatement ::= RETURN expression SEMI
+# -----------------
+# --- Statement ---
+# -----------------
+statement ::= breakStatement
+            | continueStatement
+            | emptyStatement
+            | expressionStatement
+            | loopStatement
+            | returnStatement
+            | varDecl 
+            | typeDecl  
 
 # ------------------
 # --- Expression ---
 # ------------------
 functionCaptureGroup ::= LEFT_BRACKET { [ REF | EQ ] IDENTIFIER COMMA } [ REF | EQ ] IDENTIFIER RIGHT_BRACKET
+functionReturn     ::= RETURN_ARROW ( nonAnonymousTypeExpression | NORETURN)
 
-functionValueExpression ::= FN LEFT_PAREN [ functionParameters ] RIGHT_PAREN 
-    [ functionCaptureGroup ] RETURN_ARROW nonAnonymousTypeExpression blockExpression
+functionExpressionParameter  ::= [ ( VAR | CONST ) IDENTIFIER COLON ] nonAnonymousTypeExpression
+functionExpressionParameters ::= functionExpressionParameter { COMMA functionExpressionParameter } [ COMMA ]
+functionExpression ::= FN LEFT_PAREN [ functionExpressionParameters ] RIGHT_PAREN [ functionCaptureGroup ] functionReturn blockExpression
 
-blockExpression ::= LEFT_BRACE { nonReturnStatement } [ returnStatement | expression ] RIGHT_BRACE
+blockExpression       ::= LEFT_BRACE { statement } [ expression ] RIGHT_BRACE
+unsafeBlockExpression ::= UNSAFE blockExpression
 
 valueExpression ::= INT_LITERAL | FLOAT_LITERAL | STRING_LITERAL | CHAR_LITERAL | TRUE | FALSE | NULL | IDENTIFIER
 
@@ -68,56 +81,66 @@ parExpression ::= LEFT_PAREN expression RIGHT_PAREN
 
 arrayInitExpression ::= LEFT_BRACKET [ expression { COMMA expression } ] RIGHT_BRACKET
 
-structInitExpression ::= IDENTIFIER LEFT_BRACE  RIGHT_BRACE 
+structInitMember     ::= IDENTIFIER COLON expression
+structInitEmpty      ::= IDENTIFIER LEFT_BRACE RIGHT_BRACE
+structInitNonEmpty   ::= IDENTIFIER LEFT_BRACE structInitMember { COMMA structInitMember } [ COMMA ] RIGHT_BRACE
+structInitExpression ::= structInitEmpty | structInitNonEmpty
+
+tupleInitExpression ::= LESS expression { COMMA expression } [ COMMA ] GREATER
 
 baseExpression (0) ::= blockExpression
-                     | functionValueExpression
+                     | unsafeBlockExpression
+                     | functionExpression
                      | valueExpression # base case of expression.
                      | ifExpression
                      | parExpression
                      | arrayInitExpression
                      | structInitExpression
+                     | tupleInitExpression
 
-arrayAccessExpression ::= postFixExpression LEFT_BRACKET expression RIGHT_BRACKET
+addressExpression ::= postFixExpression DOT ( PTR_VAR | PTR_CONST )
 
-functionCallExpression ::= postFixExpression LEFT_PAREN [ expression { COMMA expression } ]  RIGHT_PAREN
+dereferenceExpression ::= postFixExpression DOT STAR
+
+functionCallParamList     ::= LEFT_PAREN [ expression { COMMA expression } ] [ COMMA ]  RIGHT_PAREN
+functionCallExprNonInline ::= postFixExpression functionCallParamList
+functionCallExprInline    ::= postFixExpression INLINE functionCallParamList
 
 fieldAccessExpression ::= postFixExpression DOT identifier
 
+indexExpression ::= postFixExpression LEFT_BRACKET expression RIGHT_BRACKET
+
+referenceExpression ::= postFixExpression DOT ( REF_VAR | REF_CONST )
+
 scopeResolutionExpression ::= postFixExpression COLON_COLON identifier
 
-postFixExpresion (1) ::= baseExpression
-                       | arrayAccessExpression
-                       | functionCallExpression
-                       | fieldAccessExpression
-                       | scopeResolutionExpression
+postFixExpression (1) ::= addressExpression
+                        | baseExpression
+                        | dereferenceExpression
+                        | functionCallExpression
+                        | fieldAccessExpression
+                        | indexExpression
+                        | referenceExpression
+                        | scopeResolutionExpression
 
-addressExpression ::= AMPERSAND [ VAR | CONST ] unaryExpression
+alignExpression ::= ALIGN_OF LEFT_PAREN unaryExpression [ COMMA ] RIGHT_PAREN
 
-alignExpression ::= ALIGNOF LEFT_PAREN unaryExpression RIGHT_PAREN
+castExpression ::= CAST LEFT_PAREN nonAnonymousTypeExpression COMMA expression [ COMMA ] RIGHT_PAREN
 
 complementExpression ::= TILDE unaryExpression
-
-dereferenceExpression ::= STAR unaryExpression
 
 negationExpression ::= MINUS unaryExpression
 
 notExpression ::= BANG unaryExpression
 
-referenceExpression ::= REF [ VAR | CONST ] unaryExpression
-
-sizeOfExpression ::= SIZEOF LEFT_PAREN unaryExpression RIGHT_PAREN
+sizeOfExpression ::= SIZE_OF LEFT_PAREN unaryExpression [ COMMA ] RIGHT_PAREN
 
 unaryExpression (2) ::= postFixExpression
-                      | addressExpression
                       | alignExpression
                       | complementExpression
-                      | dereferenceExpression
                       | negationExpression
                       | notExpression
-                      | referenceExpression
                       | sizeOfExpression
-
 
 rangeExpression (3) ::= expression ( RANGE_LESS | RANGE_EQ ) expression
 
@@ -154,7 +177,7 @@ bitwiseXORExpression (11) ::= bitwiseAndExpression
                             | bitwiseXORExpression CARET bitwiseAndExpression
 
 bitwiseOrExpression (12) ::= bitwiseXORExpression
-                           | bitwiseOrxpression PIPE bitwiseXORExpression
+                           | bitwiseOrExpression PIPE bitwiseXORExpression
 
 logicalAndExpression (13) ::= bitwiseOrExpression
                             | logicalAndExpression AND bitwiseOrExpression
@@ -187,7 +210,7 @@ intrinsicTypeExpression ::= VOID
                           | U8 | I8 | U16 | I16 | U32 | I32 | U64 | I64
                           | CHAR8 | CHAR16 | CHAR32
 
-alignmentDecl         ::= ALIGNAS LEFT_PAREN expression RIGHT_PAREN
+alignmentDecl         ::= ALIGN_AS LEFT_PAREN expression RIGHT_PAREN
 emptyStructExpression ::= STRUCT LEFT_BRACE RIGHT_BRACE
 structMember          ::= [ PUB ] identifier COLON nonAnonymousTypeExpression [ alignmentDecl ]
 structExpression      ::= emptyStructExpression 
@@ -200,11 +223,11 @@ anonymousTypeExpression ::= structExpression
                           | enumExpression
                           | flagExpression
 
-functionParameter      ::= [ IDENTIFIER COLON ] nonAnonymousTypeExpression 
-functionParameters     ::= functionParameter { COMMA functionParameter }
-functionTypeExpression ::= FN LEFT_PAREN [ functionParameters ] RIGHT_PAREN RETURN_ARROW nonAnonymousTypeExpression
+functionTypeParameter  ::= [ IDENTIFIER COLON ] nonAnonymousTypeExpression
+functionTypeParameters ::= functionTypeParameter { COMMA functionTypeParameter } [ COMMA ]
+functionTypeExpression ::= FN LEFT_PAREN [ functionTypeParameters ] RIGHT_PAREN functionReturn
 
-pointerTypeExpression ::= STAR [ VAR | CONST ] ( 
+pointerTypeExpression ::= PTR [ VAR | CONST ] ( 
                             ( LEFT_PAREN functionTypeExpression RIGHT_PAREN ) | 
                             nonFunctionTypeExpression
                         )
@@ -219,11 +242,14 @@ referenceTypeExpression ::= REF [ VAR | CONST ] (
                             nonFunctionTypeExpression
                         )
 
+tupleTypeExpression ::= LESS nonAnonymousTypeExpression { COMMA nonAnonymousTypeExpression } [ COMMA ] GREATER
+
 nonFunctionTypeExpression ::= IDENTIFIER
                             | intrinsicTypeExpression 
                             | pointerTypeExpression
                             | arrayTypeExpression
                             | referenceTypeExpression
+                            | tupleTypeExpression
 
 nonAnonymousTypeExpression ::= nonFunctionTypeExpression | functionTypeExpression
 
@@ -236,16 +262,18 @@ typeExpression ::= nonAnonymousTypeExpression
 # -------------
 mutability ::= CONST | VAR | COMPTIME
 
-varDecl ::= [ PUB ] varDeclarator EQ ( expression | UNDEFINED ) SEMI
+varDecl ::= [ PUB | PERSIST ] varDeclarator EQ ( expression | UNDEFINED ) SEMI
 
 varDeclarator ::= mutability identifier [ COLON nonAnonymousTypeExpression ]
 
 typeDecl ::=
     [ PUB ] TYPE identifier EQ typeExpression SEMI
 
-declaration ::= varDecl
+declaration ::= discardDecl
+              | varDecl
               | typeDecl
 
+discardDecl ::= UNDERSCORE EQ expression SEMI
 
 # -------------
 # --- MISC ---
