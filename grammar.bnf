@@ -15,9 +15,13 @@ importStatement ::= CONST IDENTIFIER EQ IMPORT LEFT_PAREN EXPRESSION RIGHT_PAREN
 # -----------------
 # --- Statement ---
 # -----------------
-breakStatement = BREAK SEMI
+blockStatement ::= [ UNSAFE ] LEFT_BRACE { statement } RIGHT_BRACE
 
-continueStatement = CONTINUE SEMI
+breakStatement ::= BREAK SEMI
+
+continueStatement ::= CONTINUE SEMI
+
+deferStatement ::= DEFER blockStatement SEMI
 
 emptyStatement ::= SEMI
 
@@ -28,19 +32,16 @@ returnStatement ::= RETURN expression SEMI
 # ---------------------------
 # --- Statement --- Loops ---
 # ---------------------------
-loopBlockStatement       ::= LEFT_BRACE { statement } RIGHT_BRACE
-unsafeLoopBlockStatement ::= UNSAFE loopBlockStatement
-
-doLoop ::= DO loopBlockStatement WHILE parExpression SEMI
+doLoop ::= DO blockStatement WHILE parExpression SEMI
 
 forInit     ::= varDeclarator EQ expression { COMMA varDeclarator EQ expression }
 forUpdate   ::= expression { COMMA expression }
-forLoop     ::= FOR LEFT_PAREN [ forInit ] SEMI [ expression ] SEMI [ forUpdate ] RIGHT_PAREN loopBlockStatement
-forEachLoop ::= FOREACH LEFT_PAREN varDeclarator IN expression RIGHT_PAREN loopBlockStatement
+forLoop     ::= FOR LEFT_PAREN [ forInit ] SEMI [ expression ] SEMI [ forUpdate ] RIGHT_PAREN blockStatement
+forEachLoop ::= FOREACH LEFT_PAREN varDeclarator IN expression RIGHT_PAREN blockStatement
 
-loopLoop ::= LOOP loopBlockStatement
+loopLoop ::= LOOP blockStatement
 
-whileLoop ::= WHILE parExpression loopBlockStatement
+whileLoop ::= WHILE parExpression blockStatement
 
 loopStatement ::= doLoop
                 | forLoop
@@ -70,8 +71,7 @@ functionExpressionParameter  ::= [ ( VAR | CONST ) IDENTIFIER COLON ] nonAnonymo
 functionExpressionParameters ::= functionExpressionParameter { COMMA functionExpressionParameter } [ COMMA ]
 functionExpression ::= FN LEFT_PAREN [ functionExpressionParameters ] RIGHT_PAREN [ functionCaptureGroup ] functionReturn blockExpression
 
-blockExpression       ::= LEFT_BRACE { statement } [ expression ] RIGHT_BRACE
-unsafeBlockExpression ::= UNSAFE blockExpression
+blockExpression ::= [ UNSAFE ] LEFT_BRACE { statement } [ expression ] RIGHT_BRACE
 
 valueExpression ::= INT_LITERAL | FLOAT_LITERAL | STRING_LITERAL | CHAR_LITERAL | TRUE | FALSE | NULL | IDENTIFIER
 
@@ -89,7 +89,6 @@ structInitExpression ::= structInitEmpty | structInitNonEmpty
 tupleInitExpression ::= LESS expression { COMMA expression } [ COMMA ] GREATER
 
 baseExpression (0) ::= blockExpression
-                     | unsafeBlockExpression
                      | functionExpression
                      | valueExpression # base case of expression.
                      | ifExpression
@@ -212,6 +211,7 @@ intrinsicTypeExpression ::= VOID
 
 alignmentDecl         ::= ALIGN_AS LEFT_PAREN expression RIGHT_PAREN
 emptyStructExpression ::= STRUCT LEFT_BRACE RIGHT_BRACE
+
 structMember          ::= [ PUB ] identifier COLON nonAnonymousTypeExpression [ alignmentDecl ]
 structExpression      ::= emptyStructExpression 
                         | ( STRUCT [ alignmentDecl ] LEFT_BRACE 
