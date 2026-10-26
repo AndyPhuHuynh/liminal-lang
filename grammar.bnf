@@ -262,12 +262,12 @@ typeExpression ::= nonAnonymousTypeExpression
 # -------------
 mutability ::= CONST | VAR | COMPTIME
 
+tupleDestructure ::= LEFT_PAREN IDENTIFIER { COMMA IDENTIFIER } [ COMMA ] RIGHT_PAREN
+
 varDecl ::= [ PUB | PERSIST ] varDeclarator EQ ( expression | UNDEFINED ) SEMI
+varDeclarator ::= mutability ( IDENTIFIER | tupleDestructure ) [ COLON nonAnonymousTypeExpression ]
 
-varDeclarator ::= mutability identifier [ COLON nonAnonymousTypeExpression ]
-
-typeDecl ::=
-    [ PUB ] TYPE identifier EQ typeExpression SEMI
+typeDecl ::= [ PUB ] TYPE identifier EQ typeExpression SEMI
 
 declaration ::= discardDecl
               | varDecl
