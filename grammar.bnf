@@ -224,7 +224,8 @@ intrinsicTypeExpression ::= VOID
 
 alignmentDecl         ::= AT_ALIGN_AS LEFT_PAREN expression RIGHT_PAREN
 
-enumTypeExpression ::= ENUM LEFT_BRACE RIGHT_BRACE
+enumMember         ::= IDENTIFIER COLON typeExpression
+enumTypeExpression ::= ENUM LEFT_BRACE enumMember { COMMA enumMember } [ COMMA ] RIGHT_BRACE
 
 flagTypeExpression ::= unimplemented
 
