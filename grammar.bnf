@@ -241,7 +241,7 @@ functionTypeParameter  ::= [ IDENTIFIER COLON ] nonAnonymousTypeExpression
 functionTypeParameters ::= functionTypeParameter { COMMA functionTypeParameter } [ COMMA ]
 functionTypeExpression ::= FN LEFT_PAREN [ functionTypeParameters ] RIGHT_PAREN functionReturn
 
-pointerTypeExpression ::= PTR [ VAR | CONST ] ( 
+pointerTypeExpression ::= ( PTR_VAR | PTR_CONST ) ( 
                             ( LEFT_PAREN functionTypeExpression RIGHT_PAREN ) | 
                             nonFunctionTypeExpression
                         )
@@ -251,7 +251,7 @@ arrayTypeExpression ::= LEFT_BRACKET [ expression ] RIGHT_BRACKET (
                             nonFunctionTypeExpression
                         )
 
-referenceTypeExpression ::= REF [ VAR | CONST ] ( 
+referenceTypeExpression ::= ( REF_VAR | REF_CONST ) ( 
                             ( LEFT_PAREN functionTypeExpression RIGHT_PAREN ) | 
                             nonFunctionTypeExpression
                         )
@@ -270,7 +270,6 @@ nonAnonymousTypeExpression ::= nonFunctionTypeExpression | functionTypeExpressio
 typeExpression ::= nonAnonymousTypeExpression 
                  | anonymousTypeExpression
 
-
 # -------------
 # --- DECL ---
 # -------------
@@ -278,7 +277,7 @@ mutability ::= CONST | VAR | COMPTIME
 
 tupleDestructure ::= LEFT_PAREN IDENTIFIER { COMMA IDENTIFIER } [ COMMA ] RIGHT_PAREN
 
-varDecl ::= [ PUB | PERSIST ] varDeclarator EQ ( expression | UNDEFINED ) SEMI
+varDecl       ::= [ PUB | PERSIST ] varDeclarator EQ ( expression | UNDEFINED ) SEMI
 varDeclarator ::= mutability ( IDENTIFIER | tupleDestructure ) [ COLON nonAnonymousTypeExpression ]
 
 typeDecl ::= [ PUB ] TYPE identifier EQ typeExpression SEMI
