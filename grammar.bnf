@@ -81,12 +81,21 @@ parExpression ::= LEFT_PAREN expression RIGHT_PAREN
 
 arrayInitExpression ::= LEFT_BRACKET [ expression { COMMA expression } ] RIGHT_BRACKET
 
+enumInitExpression ::= AT_ENUM LEFT_PAREN 
+                            nonAnonymousTypeExpression COMMA 
+                            IDENTIFIER COMMA 
+                            ( expression | structInitMembers ) [ COMMA ] 
+                        RIGHT_PAREN
+
+flagInitExpression ::= unimplemented
+
 structInitMember     ::= IDENTIFIER COLON expression
+structInitMembers    ::= LEFT_BRACE structInitMember { COMMA structInitMember } [ COMMA ] RIGHT_BRACE
 structInitEmpty      ::= IDENTIFIER LEFT_BRACE RIGHT_BRACE
-structInitNonEmpty   ::= IDENTIFIER LEFT_BRACE structInitMember { COMMA structInitMember } [ COMMA ] RIGHT_BRACE
+structInitNonEmpty   ::= IDENTIFIER structInitMembers
 structInitExpression ::= structInitEmpty | structInitNonEmpty
 
-tupleInitExpression ::= LESS expression { COMMA expression } [ COMMA ] GREATER
+tupleInitExpression ::= AT_TUPLE LEFT_PAREN expression { COMMA expression } [ COMMA ] RIGHT_PAREN
 
 baseExpression (0) ::= blockExpression
                      | functionExpression
@@ -94,6 +103,8 @@ baseExpression (0) ::= blockExpression
                      | ifExpression
                      | parExpression
                      | arrayInitExpression
+                     | enumInitExpression
+                     | flagInitExpression
                      | structInitExpression
                      | tupleInitExpression
 
@@ -245,7 +256,7 @@ referenceTypeExpression ::= REF [ VAR | CONST ] (
                             nonFunctionTypeExpression
                         )
 
-tupleTypeExpression ::= LESS nonAnonymousTypeExpression { COMMA nonAnonymousTypeExpression } [ COMMA ] GREATER
+tupleTypeExpression ::= AT_TUPLE LEFT_PAREN nonAnonymousTypeExpression { COMMA nonAnonymousTypeExpression } [ COMMA ] RIGHT_PAREN
 
 nonFunctionTypeExpression ::= IDENTIFIER
                             | intrinsicTypeExpression 

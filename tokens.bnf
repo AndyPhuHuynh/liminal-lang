@@ -75,6 +75,7 @@ AT_ENUM     ::= "@enum"
 AT_IMPORT   ::= "@import"
 AT_INLINE   ::= "@inline"
 AT_SIZE_OF  ::= "@size_of"
+AT_TUPLE    ::= "@tuple"
 
 # --------------------------------
 # Punctuation
