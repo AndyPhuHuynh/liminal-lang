@@ -99,7 +99,7 @@ tupleInitExpression ::= AT_TUPLE LEFT_PAREN expression { COMMA expression } [ CO
 
 baseExpression (0) ::= blockExpression
                      | functionExpression
-                     | valueExpression # base case of expression.
+                     | valueExpression
                      | ifExpression
                      | parExpression
                      | arrayInitExpression
@@ -107,6 +107,7 @@ baseExpression (0) ::= blockExpression
                      | flagInitExpression
                      | structInitExpression
                      | tupleInitExpression
+                     | nonAnonymousTypeExpression
 
 addressExpression ::= postFixExpression DOT ( PTR_VAR | PTR_CONST )
 
@@ -219,6 +220,7 @@ intrinsicTypeExpression ::= VOID
                           | F32 | F64
                           | U8 | I8 | U16 | I16 | U32 | I32 | U64 | I64
                           | CHAR8 | CHAR16 | CHAR32
+                          | TYPE
 
 alignmentDecl         ::= AT_ALIGN_AS LEFT_PAREN expression RIGHT_PAREN
 
@@ -258,8 +260,8 @@ referenceTypeExpression ::= ( REF_VAR | REF_CONST ) (
 
 tupleTypeExpression ::= AT_TUPLE LEFT_PAREN nonAnonymousTypeExpression { COMMA nonAnonymousTypeExpression } [ COMMA ] RIGHT_PAREN
 
-nonFunctionTypeExpression ::= IDENTIFIER
-                            | intrinsicTypeExpression 
+nonFunctionTypeExpression ::= expression
+                            | intrinsicTypeExpression
                             | pointerTypeExpression
                             | arrayTypeExpression
                             | referenceTypeExpression
@@ -267,7 +269,7 @@ nonFunctionTypeExpression ::= IDENTIFIER
 
 nonAnonymousTypeExpression ::= nonFunctionTypeExpression | functionTypeExpression
 
-typeExpression ::= nonAnonymousTypeExpression 
+typeExpression ::= nonAnonymousTypeExpression
                  | anonymousTypeExpression
 
 # -------------
