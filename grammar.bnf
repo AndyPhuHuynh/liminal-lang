@@ -10,7 +10,7 @@
 # ------------------------
 compilationUnit ::= { importStatement } { declaration }
 
-importStatement ::= CONST IDENTIFIER EQ IMPORT LEFT_PAREN EXPRESSION RIGHT_PAREN SEMI
+importStatement ::= CONST IDENTIFIER EQ AT_IMPORT LEFT_PAREN EXPRESSION RIGHT_PAREN SEMI
 
 # -----------------
 # --- Statement ---
@@ -103,7 +103,7 @@ dereferenceExpression ::= postFixExpression DOT STAR
 
 functionCallParamList     ::= LEFT_PAREN [ expression { COMMA expression } ] [ COMMA ]  RIGHT_PAREN
 functionCallExprNonInline ::= postFixExpression functionCallParamList
-functionCallExprInline    ::= postFixExpression INLINE functionCallParamList
+functionCallExprInline    ::= postFixExpression AT_INLINE functionCallParamList
 
 fieldAccessExpression ::= postFixExpression DOT identifier
 
@@ -122,9 +122,9 @@ postFixExpression (1) ::= addressExpression
                         | referenceExpression
                         | scopeResolutionExpression
 
-alignExpression ::= ALIGN_OF LEFT_PAREN unaryExpression [ COMMA ] RIGHT_PAREN
+alignExpression ::= AT_ALIGN_OF LEFT_PAREN unaryExpression [ COMMA ] RIGHT_PAREN
 
-castExpression ::= CAST LEFT_PAREN nonAnonymousTypeExpression COMMA expression [ COMMA ] RIGHT_PAREN
+castExpression ::= AT_CAST LEFT_PAREN nonAnonymousTypeExpression COMMA expression [ COMMA ] RIGHT_PAREN
 
 complementExpression ::= TILDE unaryExpression
 
@@ -132,7 +132,7 @@ negationExpression ::= MINUS unaryExpression
 
 notExpression ::= BANG unaryExpression
 
-sizeOfExpression ::= SIZE_OF LEFT_PAREN unaryExpression [ COMMA ] RIGHT_PAREN
+sizeOfExpression ::= AT_SIZE_OF LEFT_PAREN unaryExpression [ COMMA ] RIGHT_PAREN
 
 unaryExpression (2) ::= postFixExpression
                       | alignExpression
@@ -209,19 +209,22 @@ intrinsicTypeExpression ::= VOID
                           | U8 | I8 | U16 | I16 | U32 | I32 | U64 | I64
                           | CHAR8 | CHAR16 | CHAR32
 
-alignmentDecl         ::= ALIGN_AS LEFT_PAREN expression RIGHT_PAREN
-emptyStructExpression ::= STRUCT LEFT_BRACE RIGHT_BRACE
+alignmentDecl         ::= AT_ALIGN_AS LEFT_PAREN expression RIGHT_PAREN
 
-structMember          ::= [ PUB ] identifier COLON nonAnonymousTypeExpression [ alignmentDecl ]
-structExpression      ::= emptyStructExpression 
-                        | ( STRUCT [ alignmentDecl ] LEFT_BRACE 
-                                structMember { COMMA structMember } [ COMMA ] 
-                            RIGHT_BRACE )
+enumTypeExpression ::= ENUM LEFT_BRACE RIGHT_BRACE
+
+flagTypeExpression ::= unimplemented
+
+structMember              ::= [ PUB ] identifier COLON nonAnonymousTypeExpression [ alignmentDecl ]
+structTypeExpression      ::= ( STRUCT [ alignmentDecl ] LEFT_BRACE RIGHT_BRACE )
+                            | ( STRUCT [ alignmentDecl ] LEFT_BRACE 
+                                    structMember { COMMA structMember } [ COMMA ] 
+                                RIGHT_BRACE )
 
 # TODO: enumExpression and flagExpression
-anonymousTypeExpression ::= structExpression
-                          | enumExpression
-                          | flagExpression
+anonymousTypeExpression ::= enumTypeExpression
+                          | flagTypeExpression
+                          | structTypeExpression
 
 functionTypeParameter  ::= [ IDENTIFIER COLON ] nonAnonymousTypeExpression
 functionTypeParameters ::= functionTypeParameter { COMMA functionTypeParameter } [ COMMA ]

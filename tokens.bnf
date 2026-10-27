@@ -68,12 +68,13 @@ VOID   ::= "void"
 # --------------------------------
 # Punctuation
 # --------------------------------
-ALIGN_OF ::= "@align_of"
-ALIGN_AS ::= "@align_as"
-AS       ::= "@as"
-IMPORT   ::= "@import"
-INLINE   ::= "@inline"
-SIZE_OF  ::= "@size_of"
+AT_ALIGN_OF ::= "@align_of"
+AT_ALIGN_AS ::= "@align_as"
+AT_CAST     ::= "@cast"
+AT_ENUM     ::= "@enum"
+AT_IMPORT   ::= "@import"
+AT_INLINE   ::= "@inline"
+AT_SIZE_OF  ::= "@size_of"
 
 # --------------------------------
 # Punctuation
