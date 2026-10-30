@@ -87,8 +87,6 @@ enumInitExpression ::= AT_ENUM LEFT_PAREN
                             ( expression | structInitMembers ) [ COMMA ] 
                         RIGHT_PAREN
 
-flagInitExpression ::= unimplemented
-
 structInitMember     ::= IDENTIFIER COLON expression
 structInitMembers    ::= LEFT_BRACE structInitMember { COMMA structInitMember } [ COMMA ] RIGHT_BRACE
 structInitEmpty      ::= IDENTIFIER LEFT_BRACE RIGHT_BRACE
@@ -224,53 +222,50 @@ intrinsicTypeExpression ::= VOID
 
 alignmentDecl         ::= AT_ALIGN_AS LEFT_PAREN expression RIGHT_PAREN
 
-enumMember         ::= IDENTIFIER COLON typeExpression
+enumMember         ::= IDENTIFIER COLON expression
 enumTypeExpression ::= ENUM LEFT_BRACE enumMember { COMMA enumMember } [ COMMA ] RIGHT_BRACE
 
-flagTypeExpression ::= unimplemented
+flagMember         ::= IDENTIFIER EQ expression
+flagTypeExpression ::= FLAG [ LPAREN expression RPAREN ] LEFT_BRACE flagMember { COMMA flagMember } [ COMMA ] RIGHT_BRACE
 
-structMember              ::= [ PUB ] identifier COLON nonAnonymousTypeExpression [ alignmentDecl ]
-structTypeExpression      ::= ( STRUCT [ alignmentDecl ] LEFT_BRACE RIGHT_BRACE )
-                            | ( STRUCT [ alignmentDecl ] LEFT_BRACE 
+structMember         ::= [ PUB ] identifier COLON nonAnonymousTypeExpression [ alignmentDecl ]
+structTypeExpression ::= ( STRUCT [ alignmentDecl ] LEFT_BRACE RIGHT_BRACE )
+                       | ( STRUCT [ alignmentDecl ] LEFT_BRACE 
                                     structMember { COMMA structMember } [ COMMA ] 
-                                RIGHT_BRACE )
+                           RIGHT_BRACE )
 
 # TODO: enumExpression and flagExpression
-anonymousTypeExpression ::= enumTypeExpression
-                          | flagTypeExpression
-                          | structTypeExpression
-
 functionTypeParameter  ::= [ IDENTIFIER COLON ] nonAnonymousTypeExpression
 functionTypeParameters ::= functionTypeParameter { COMMA functionTypeParameter } [ COMMA ]
 functionTypeExpression ::= FN LEFT_PAREN [ functionTypeParameters ] RIGHT_PAREN functionReturn
 
-pointerTypeExpression ::= ( PTR_VAR | PTR_CONST ) typeExpression
+pointerTypeExpression ::= ( PTR_VAR | PTR_CONST ) expression
 
-arrayTypeExpression ::= LEFT_BRACKET [ expression ] RIGHT_BRACKET typeExpression
+arrayTypeExpression ::= LEFT_BRACKET [ expression ] RIGHT_BRACKET expression
 
-referenceTypeExpression ::= ( REF_VAR | REF_CONST ) typeExpression
+referenceTypeExpression ::= ( REF_VAR | REF_CONST ) expression
 
-nonAnonymousTypeExpression ::= expression
-                             | intrinsicTypeExpression
-                             | pointerTypeExpression
-                             | arrayTypeExpression
-                             | referenceTypeExpression
-                             | functionTypeExpression
-
-typeExpression ::= nonAnonymousTypeExpression
-                 | anonymousTypeExpression
+typeExpression ::= expression
+                 | intrinsicTypeExpression
+                 | pointerTypeExpression
+                 | arrayTypeExpression
+                 | referenceTypeExpression
+                 | functionTypeExpression
+                 | enumTypeExpression
+                 | flagTypeExpression
+                 | structTypeExpression
 
 # -------------
 # --- DECL ---
 # -------------
 mutability ::= CONST | VAR | COMPTIME
 
-tupleDestructure ::= LEFT_PAREN IDENTIFIER { COMMA IDENTIFIER } [ COMMA ] RIGHT_PAREN
+tupleDestructure ::= LEFT_PAREN ( IDENTIFIER | UNDERSCORE ) { COMMA ( IDENTIFIER | UNDERSCORE )} [ COMMA ] RIGHT_PAREN
 
 varDecl       ::= [ PUB | PERSIST ] varDeclarator EQ ( expression | UNDEFINED ) SEMI
 varDeclarator ::= mutability ( IDENTIFIER | tupleDestructure ) [ COLON nonAnonymousTypeExpression ]
 
-typeDecl ::= [ PUB ] TYPE identifier EQ typeExpression SEMI
+typeDecl ::= [ PUB ] TYPE identifier EQ expression SEMI
 
 declaration ::= discardDecl
               | varDecl
