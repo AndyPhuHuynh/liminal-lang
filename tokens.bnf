@@ -122,6 +122,7 @@ RIGHT_SHIFT ::= ">>"
 
 RANGE_LESS ::= "..<"
 RANGE_EQ   ::= "..="
+RANGE_NO   ::= ".."
 
 DEREF        ::= ".*"
 RETURN_ARROW ::= "->"

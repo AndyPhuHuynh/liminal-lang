@@ -129,6 +129,8 @@ scopeResolutionExpression ::= postFixExpression COLON_COLON IDENTIFIER
 
 genericResolutionExpression ::= postFixExpression COLON_COLON LESS expression { COMMA expression } [ COMMA ] GREATER
 
+postFixRangeExpression ::= postFixExpression RANGE_NO 
+
 postFixExpression (1) ::= addressExpression
                         | baseExpression
                         | dereferenceExpression
@@ -151,14 +153,18 @@ notExpression ::= BANG unaryExpression
 
 sizeOfExpression ::= AT_SIZE_OF LEFT_PAREN unaryExpression [ COMMA ] RIGHT_PAREN
 
+preFixRangeExpression ::= ( RANGE_LESS | RANGE_EQ ) unaryExpression 
+
 unaryExpression (2) ::= postFixExpression
                       | alignExpression
                       | complementExpression
                       | negationExpression
                       | notExpression
                       | sizeOfExpression
+                      | preFixRangeExpression
 
-rangeExpression (3) ::= expression ( RANGE_LESS | RANGE_EQ ) expression
+rangeExpression (3) ::= unaryExpression 
+                      | rangeExpression ( RANGE_LESS | RANGE_EQ ) unaryExpression 
 
 exponentExpression (4) ::= rangeExpression
                          | exponentExpression STAR_STAR rangeExpression
