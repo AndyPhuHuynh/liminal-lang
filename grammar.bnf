@@ -95,7 +95,7 @@ structInitEmpty      ::= IDENTIFIER LEFT_BRACE RIGHT_BRACE
 structInitNonEmpty   ::= IDENTIFIER structInitMembers
 structInitExpression ::= structInitEmpty | structInitNonEmpty
 
-tupleInitExpression ::= AT_TUPLE LEFT_PAREN expression { COMMA expression } [ COMMA ] RIGHT_PAREN
+tupleExpression ::= AT_TUPLE LEFT_PAREN expression { COMMA expression } [ COMMA ] RIGHT_PAREN
 
 baseExpression (0) ::= blockExpression
                      | functionExpression
@@ -106,8 +106,8 @@ baseExpression (0) ::= blockExpression
                      | enumInitExpression
                      | flagInitExpression
                      | structInitExpression
-                     | tupleInitExpression
-                     | nonAnonymousTypeExpression
+                     | tupleExpression
+                     | typeExpression
 
 addressExpression ::= postFixExpression DOT ( PTR_VAR | PTR_CONST )
 
@@ -244,31 +244,18 @@ functionTypeParameter  ::= [ IDENTIFIER COLON ] nonAnonymousTypeExpression
 functionTypeParameters ::= functionTypeParameter { COMMA functionTypeParameter } [ COMMA ]
 functionTypeExpression ::= FN LEFT_PAREN [ functionTypeParameters ] RIGHT_PAREN functionReturn
 
-pointerTypeExpression ::= ( PTR_VAR | PTR_CONST ) ( 
-                            ( LEFT_PAREN functionTypeExpression RIGHT_PAREN ) | 
-                            nonFunctionTypeExpression
-                        )
+pointerTypeExpression ::= ( PTR_VAR | PTR_CONST ) typeExpression
 
-arrayTypeExpression ::= LEFT_BRACKET [ expression ] RIGHT_BRACKET ( 
-                            ( LEFT_PAREN functionTypeExpression RIGHT_PAREN ) | 
-                            nonFunctionTypeExpression
-                        )
+arrayTypeExpression ::= LEFT_BRACKET [ expression ] RIGHT_BRACKET typeExpression
 
-referenceTypeExpression ::= ( REF_VAR | REF_CONST ) ( 
-                            ( LEFT_PAREN functionTypeExpression RIGHT_PAREN ) | 
-                            nonFunctionTypeExpression
-                        )
+referenceTypeExpression ::= ( REF_VAR | REF_CONST ) typeExpression
 
-tupleTypeExpression ::= AT_TUPLE LEFT_PAREN nonAnonymousTypeExpression { COMMA nonAnonymousTypeExpression } [ COMMA ] RIGHT_PAREN
-
-nonFunctionTypeExpression ::= expression
-                            | intrinsicTypeExpression
-                            | pointerTypeExpression
-                            | arrayTypeExpression
-                            | referenceTypeExpression
-                            | tupleTypeExpression
-
-nonAnonymousTypeExpression ::= nonFunctionTypeExpression | functionTypeExpression
+nonAnonymousTypeExpression ::= expression
+                             | intrinsicTypeExpression
+                             | pointerTypeExpression
+                             | arrayTypeExpression
+                             | referenceTypeExpression
+                             | functionTypeExpression
 
 typeExpression ::= nonAnonymousTypeExpression
                  | anonymousTypeExpression
