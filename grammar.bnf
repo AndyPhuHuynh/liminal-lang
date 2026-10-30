@@ -84,6 +84,12 @@ enumInitExpression ::= AT_ENUM LEFT_PAREN
                             ( expression | structInitMembers ) [ COMMA ] 
                         RIGHT_PAREN
 
+ignorableExpression ::= expression | UNDERSCORE 
+matchCapture        ::= PIPE IDENTIFIER { COMMA IDENTIFIER } [ COMMA ] PIPE 
+matchPattern        ::= ignorableExpression | ( LEFT_PAREN ignorableExpression { COMMA ignorableExpression } [ COMMA ] RIGHT_PAREN ) 
+matchCase           ::= matchPattern MATCH_ARROW [ matchCapture ] expression 
+matchExpression     ::= MATCH parExpression LEFT_BRACE matchCase { COMMA matchCase } [ COMMA ] RIGHT_BRACE
+
 structInitMember     ::= IDENTIFIER COLON expression
 structInitMembers    ::= LEFT_BRACE structInitMember { COMMA structInitMember } [ COMMA ] RIGHT_BRACE
 structInitEmpty      ::= IDENTIFIER LEFT_BRACE RIGHT_BRACE
@@ -96,6 +102,7 @@ baseExpression (0) ::= blockExpression
                      | functionExpression
                      | valueExpression
                      | ifExpression
+                     | matchExpression
                      | parExpression
                      | arrayInitExpression
                      | enumInitExpression

@@ -125,7 +125,7 @@ RANGE_EQ   ::= "..="
 
 DEREF        ::= ".*"
 RETURN_ARROW ::= "->"
-SWITCH_ARROW ::= "=>"
+MATCH_ARROW  ::= "=>"
 
 COMMA         ::= ","
 SINGLE_QUOTE  ::= "'"
