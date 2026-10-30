@@ -90,7 +90,7 @@ structInitEmpty      ::= IDENTIFIER LEFT_BRACE RIGHT_BRACE
 structInitNonEmpty   ::= IDENTIFIER structInitMembers
 structInitExpression ::= structInitEmpty | structInitNonEmpty
 
-tupleExpression ::= AT_TUPLE LEFT_PAREN expression { COMMA expression } [ COMMA ] RIGHT_PAREN
+tupleInitExpression ::= AT_TUPLE LEFT_PAREN expression { COMMA expression } [ COMMA ] RIGHT_PAREN
 
 baseExpression (0) ::= blockExpression
                      | functionExpression
@@ -101,7 +101,7 @@ baseExpression (0) ::= blockExpression
                      | enumInitExpression
                      | flagInitExpression
                      | structInitExpression
-                     | tupleExpression
+                     | tupleInitExpression
                      | typeExpression
 
 addressExpression ::= postFixExpression DOT ( PTR_VAR | PTR_CONST )
@@ -120,11 +120,14 @@ referenceExpression ::= postFixExpression DOT ( REF_VAR | REF_CONST )
 
 scopeResolutionExpression ::= postFixExpression COLON_COLON IDENTIFIER
 
+genericResolutionExpression ::= postFixExpression COLON_COLON LESS expression { COMMA expression } [ COMMA ] GREATER
+
 postFixExpression (1) ::= addressExpression
                         | baseExpression
                         | dereferenceExpression
                         | functionCallExpression
                         | fieldAccessExpression
+                        | genericResolutionExpression
                         | indexExpression
                         | referenceExpression
                         | scopeResolutionExpression
@@ -217,7 +220,7 @@ intrinsicTypeExpression ::= VOID
                           | CHAR8 | CHAR16 | CHAR32
                           | TYPE
 
-alignmentDecl         ::= AT_ALIGN_AS LEFT_PAREN expression RIGHT_PAREN
+alignmentDecl ::= AT_ALIGN_AS LEFT_PAREN expression RIGHT_PAREN
 
 enumMember         ::= IDENTIFIER COLON expression
 enumTypeExpression ::= ENUM LEFT_BRACE enumMember { COMMA enumMember } [ COMMA ] RIGHT_BRACE
@@ -242,6 +245,8 @@ arrayTypeExpression ::= LEFT_BRACKET [ expression ] RIGHT_BRACKET expression
 
 referenceTypeExpression ::= ( REF_VAR | REF_CONST ) expression
 
+tupleTypeExpression ::= TUPLE COLON_COLON LESS expression { COMMA expression } [ COMMA ] GREATER 
+
 typeExpression ::= expression
                  | intrinsicTypeExpression
                  | pointerTypeExpression
@@ -251,6 +256,7 @@ typeExpression ::= expression
                  | enumTypeExpression
                  | flagTypeExpression
                  | structTypeExpression
+                 | tupleTypeExpression
 
 # -------------
 # --- DECL ---
@@ -259,10 +265,12 @@ mutability ::= CONST | VAR | COMPTIME
 
 tupleDestructure ::= LEFT_PAREN ( IDENTIFIER | UNDERSCORE ) { COMMA ( IDENTIFIER | UNDERSCORE )} [ COMMA ] RIGHT_PAREN
 
-varDecl       ::= [ PUB | PERSIST ] varDeclarator EQ ( expression | UNDEFINED ) SEMI
+genericExpression ::= LESS IDENTIFIER COLON expression { COMMA IDENTIFIER COLON EXPRESSION } [ COMMA ] GREATER 
+
+varDecl       ::= [ PUB | PERSIST ] varDeclarator EQ [ genericExpression ] ( expression | UNDEFINED ) SEMI
 varDeclarator ::= mutability ( IDENTIFIER | tupleDestructure ) [ COLON expression ]
 
-typeDecl ::= [ PUB ] TYPE ( IDENTIFIER | tupleDestucture ) EQ expression SEMI
+typeDecl ::= [ PUB ] TYPE ( IDENTIFIER | tupleDestucture ) EQ [ genericExpression ] expression SEMI
 
 declaration ::= discardDecl
               | varDecl
