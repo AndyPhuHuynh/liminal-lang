@@ -1,9 +1,6 @@
-# TODO: Const pointers and array types.
 # TODO: imports and exports.
 # TODO: utf-8 character literals etc.
-# TODO: All operations and in nonReturnStatement. 
 # TODO: vectors and matrices.
-# TODO: slice array syntax
 
 # ------------------------
 # --- Compilation Unit ---
@@ -65,9 +62,9 @@ statement ::= breakStatement
 # --- Expression ---
 # ------------------
 functionCaptureGroup ::= LEFT_BRACKET { [ REF | EQ ] IDENTIFIER COMMA } [ REF | EQ ] IDENTIFIER RIGHT_BRACKET
-functionReturn     ::= RETURN_ARROW ( nonAnonymousTypeExpression | NORETURN)
+functionReturn     ::= RETURN_ARROW ( expression | NORETURN)
 
-functionExpressionParameter  ::= [ ( VAR | CONST ) IDENTIFIER COLON ] nonAnonymousTypeExpression
+functionExpressionParameter  ::= [ ( VAR | CONST ) IDENTIFIER COLON ] expression 
 functionExpressionParameters ::= functionExpressionParameter { COMMA functionExpressionParameter } [ COMMA ]
 functionExpression ::= FN LEFT_PAREN [ functionExpressionParameters ] RIGHT_PAREN [ functionCaptureGroup ] functionReturn blockExpression
 
@@ -82,7 +79,7 @@ parExpression ::= LEFT_PAREN expression RIGHT_PAREN
 arrayInitExpression ::= LEFT_BRACKET [ expression { COMMA expression } ] RIGHT_BRACKET
 
 enumInitExpression ::= AT_ENUM LEFT_PAREN 
-                            nonAnonymousTypeExpression COMMA 
+                            expression COMMA 
                             IDENTIFIER COMMA 
                             ( expression | structInitMembers ) [ COMMA ] 
                         RIGHT_PAREN
@@ -115,13 +112,13 @@ functionCallParamList     ::= LEFT_PAREN [ expression { COMMA expression } ] [ C
 functionCallExprNonInline ::= postFixExpression functionCallParamList
 functionCallExprInline    ::= postFixExpression AT_INLINE functionCallParamList
 
-fieldAccessExpression ::= postFixExpression DOT identifier
+fieldAccessExpression ::= postFixExpression DOT IDENTIFIER
 
 indexExpression ::= postFixExpression LEFT_BRACKET expression RIGHT_BRACKET
 
 referenceExpression ::= postFixExpression DOT ( REF_VAR | REF_CONST )
 
-scopeResolutionExpression ::= postFixExpression COLON_COLON identifier
+scopeResolutionExpression ::= postFixExpression COLON_COLON IDENTIFIER
 
 postFixExpression (1) ::= addressExpression
                         | baseExpression
@@ -134,7 +131,7 @@ postFixExpression (1) ::= addressExpression
 
 alignExpression ::= AT_ALIGN_OF LEFT_PAREN unaryExpression [ COMMA ] RIGHT_PAREN
 
-castExpression ::= AT_CAST LEFT_PAREN nonAnonymousTypeExpression COMMA expression [ COMMA ] RIGHT_PAREN
+castExpression ::= AT_CAST LEFT_PAREN expression COMMA expression [ COMMA ] RIGHT_PAREN
 
 complementExpression ::= TILDE unaryExpression
 
@@ -228,14 +225,14 @@ enumTypeExpression ::= ENUM LEFT_BRACE enumMember { COMMA enumMember } [ COMMA ]
 flagMember         ::= IDENTIFIER EQ expression
 flagTypeExpression ::= FLAG [ LPAREN expression RPAREN ] LEFT_BRACE flagMember { COMMA flagMember } [ COMMA ] RIGHT_BRACE
 
-structMember         ::= [ PUB ] identifier COLON nonAnonymousTypeExpression [ alignmentDecl ]
+structMember         ::= [ PUB ] IDENTIFIER COLON expression [ alignmentDecl ]
 structTypeExpression ::= ( STRUCT [ alignmentDecl ] LEFT_BRACE RIGHT_BRACE )
                        | ( STRUCT [ alignmentDecl ] LEFT_BRACE 
                                     structMember { COMMA structMember } [ COMMA ] 
                            RIGHT_BRACE )
 
 # TODO: enumExpression and flagExpression
-functionTypeParameter  ::= [ IDENTIFIER COLON ] nonAnonymousTypeExpression
+functionTypeParameter  ::= [ IDENTIFIER COLON ] expression 
 functionTypeParameters ::= functionTypeParameter { COMMA functionTypeParameter } [ COMMA ]
 functionTypeExpression ::= FN LEFT_PAREN [ functionTypeParameters ] RIGHT_PAREN functionReturn
 
@@ -263,9 +260,9 @@ mutability ::= CONST | VAR | COMPTIME
 tupleDestructure ::= LEFT_PAREN ( IDENTIFIER | UNDERSCORE ) { COMMA ( IDENTIFIER | UNDERSCORE )} [ COMMA ] RIGHT_PAREN
 
 varDecl       ::= [ PUB | PERSIST ] varDeclarator EQ ( expression | UNDEFINED ) SEMI
-varDeclarator ::= mutability ( IDENTIFIER | tupleDestructure ) [ COLON nonAnonymousTypeExpression ]
+varDeclarator ::= mutability ( IDENTIFIER | tupleDestructure ) [ COLON expression ]
 
-typeDecl ::= [ PUB ] TYPE identifier EQ expression SEMI
+typeDecl ::= [ PUB ] TYPE ( IDENTIFIER | tupleDestucture ) EQ expression SEMI
 
 declaration ::= discardDecl
               | varDecl
