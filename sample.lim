@@ -1,0 +1,58 @@
+// This is a sample program
+
+comptime Vector = <T> struct {
+    data: ptr_var T,
+    size: usize,
+    capacity: usize,    
+};
+
+// No methods yet, so I'm creating and using normal functions
+// No allocators yet? So just using malloc as a stub
+const vector_init = <T> fn() -> Vector::<T> {
+    comptime default_size: u32 = 8;
+    Vector::<T> {
+        data: malloc(@size_of(T) * default_size),
+        size: 0usize,
+        capacity: default_size,
+    }
+};
+
+// Unsure about the semantics of indexing a pointer
+const vector_get_var = <T> fn(self: ref_var Vector::<T>) -> ref_var T {
+    ref_var self.data[i]
+};
+
+const vector_get_const = <T> fn(self: ref_const Vector::<T>) -> ref_const T {
+    ref_const self.data[i]
+};
+
+const vector_append = <T> fn(self: ref_var Vector::<T>, value: T) -> void {
+    if (self.size >= self.capacity) {
+        self.capacity *= 2;
+        self.data = realloc(self.data, self.capacity);
+    }
+    self.data[size] = value;
+    self.size += 1;
+};
+
+// Error handling is unknown for now, what happens if pop is called with size zero?
+const vector_pop = <T> fn(self: ref_var Vector::<T>) -> Option::<T> {
+    if (self.size >= 1) {
+        const res = @enum(Option, Some, self.data[size]);
+        self.size -= 1;
+        res
+    } else {
+        @enum(Option, None)
+    }
+};
+
+// Uses printf because we don't have printing yet
+const main = fn() -> void {
+    var my_vec = vector_init::<i32>();
+    for (const i <- 0..10) {
+        vector_append(ref_var my_vec, i);
+    }
+    for (const i <- my_vec) {
+        printf("%d", i);
+    }
+};
