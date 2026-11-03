@@ -56,7 +56,6 @@ statement ::= breakStatement
             | loopStatement
             | returnStatement
             | varDecl 
-            | typeDecl  
 
 # ------------------
 # --- Expression ---
@@ -236,10 +235,10 @@ intrinsicTypeExpression ::= VOID
 alignmentDecl ::= AT_ALIGN_AS LEFT_PAREN expression RIGHT_PAREN
 
 enumMember         ::= IDENTIFIER COLON expression
-enumTypeExpression ::= ENUM LEFT_BRACE enumMember { COMMA enumMember } [ COMMA ] RIGHT_BRACE
+enumTypeExpression ::= ENUM [ LEFT_PAREN ERROR RIGHT_PAREN ] LEFT_BRACE enumMember { COMMA enumMember } [ COMMA ] RIGHT_BRACE
 
 flagMember         ::= IDENTIFIER EQ expression
-flagTypeExpression ::= FLAG [ LPAREN expression RPAREN ] LEFT_BRACE flagMember { COMMA flagMember } [ COMMA ] RIGHT_BRACE
+flagTypeExpression ::= FLAG [ LEFT_PAREN expression RIGHT_PAREN ] LEFT_BRACE flagMember { COMMA flagMember } [ COMMA ] RIGHT_BRACE
 
 structMember         ::= [ PUB ] IDENTIFIER COLON expression [ alignmentDecl ]
 structTypeExpression ::= ( STRUCT [ alignmentDecl ] LEFT_BRACE RIGHT_BRACE )
@@ -283,11 +282,8 @@ genericExpression ::= LESS IDENTIFIER COLON expression { COMMA IDENTIFIER COLON 
 varDecl       ::= [ PUB | PERSIST ] varDeclarator EQ [ genericExpression ] ( expression | UNDEFINED ) SEMI
 varDeclarator ::= mutability ( IDENTIFIER | tupleDestructure ) [ COLON expression ]
 
-typeDecl ::= [ PUB ] TYPE ( IDENTIFIER | tupleDestucture ) EQ [ genericExpression ] expression SEMI
-
 declaration ::= discardDecl
               | varDecl
-              | typeDecl
 
 discardDecl ::= UNDERSCORE EQ expression SEMI
 
