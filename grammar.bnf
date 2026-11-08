@@ -108,7 +108,7 @@ baseExpression (0) ::= blockExpression
                      | flagInitExpression
                      | structInitExpression
                      | tupleInitExpression
-                     | typeExpression
+                     | rawTypeExpression
 
 addressExpression ::= postFixExpression DOT ( PTR_VAR | PTR_CONST )
 
@@ -264,16 +264,16 @@ referenceTypeExpression ::= ( REF_VAR | REF_CONST ) expression
 
 tupleTypeExpression ::= TUPLE COLON_COLON LESS expression { COMMA expression } [ COMMA ] GREATER 
 
-typeExpression ::= expression
-                 | intrinsicTypeExpression
-                 | pointerTypeExpression
-                 | arrayTypeExpression
-                 | referenceTypeExpression
-                 | functionTypeExpression
-                 | enumTypeExpression
-                 | flagTypeExpression
-                 | structTypeExpression
-                 | tupleTypeExpression
+rawTypeExpression ::= intrinsicTypeExpression
+                    | pointerTypeExpression
+                    | arrayTypeExpression
+                    | referenceTypeExpression
+                    | functionTypeExpression
+                    | enumTypeExpression
+                    | flagTypeExpression
+                    | structTypeExpression
+                    | tupleTypeExpression
+                    | AT_ANY_ERROR
 
 # -------------
 # --- DECL ---
