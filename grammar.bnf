@@ -152,6 +152,8 @@ notExpression ::= BANG unaryExpression
 
 sizeOfExpression ::= AT_SIZE_OF LEFT_PAREN unaryExpression [ COMMA ] RIGHT_PAREN
 
+tryExpression ::= TRY unaryExpression
+
 preFixRangeExpression ::= ( RANGE_LESS | RANGE_EQ ) unaryExpression 
 
 unaryExpression (2) ::= postFixExpression
@@ -160,6 +162,7 @@ unaryExpression (2) ::= postFixExpression
                       | negationExpression
                       | notExpression
                       | sizeOfExpression
+                      | tryExpression
                       | preFixRangeExpression
 
 rangeExpression (3) ::= unaryExpression 
