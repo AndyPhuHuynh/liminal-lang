@@ -206,19 +206,24 @@ logicalAndExpression (13) ::= bitwiseOrExpression
 logicalOrExpression (14) ::= logicalAndExpression
                            | logicalOrExpression OR logicalAndExpression
 
-assignmentExpression (15) ::= logicalOrExpression PLUS_EQ expression # All assignments return void.
-                            | logicalOrExpression MINUS_EQ expression      
-                            | logicalOrExpression STAR_EQ expression
-                            | logicalOrExpression STAR_STAR_EQ expression
-                            | logicalOrExpression SLASH_EQ expression
-                            | logicalOrExpression PERCENT_EQ expression
-                            | logicalOrExpression CARET_EQ expression   
-                            | logicalOrExpression TILDE_EQ expression
-                            | logicalOrExpression PIPE_EQ expression
-                            | logicalOrExpression AMPERSAND_EQ expression
-                            | logicalOrExpression LEFT_SHIFT_EQ  expression
-                            | logicalOrExpression RIGHT_SHIFT_EQ expression
-                            | logicalOrExpression EQ expression
+errorUnionExpression (15) ::= logicalOrExpression
+                            | errorUnionExpression BANG logicalOrExpression
+
+assignmentOperator ::= PLUS_EQ
+                       MINUS_EQ
+                       STAR_EQ
+                       STAR_STAR_EQ
+                       SLASH_EQ
+                       PERCENT_EQ
+                       CARET_EQ
+                       TILDE_EQ
+                       PIPE_EQ
+                       AMPERSAND_EQ
+                       LEFT_SHIFT_EQ
+                       RIGHT_SHIFT_EQ
+                       EQ
+
+assignmentExpression (16) ::= errorUnionExpression assignmentOperator expression # All assignments return void.         
 
 expression ::= assignmentExpression
 

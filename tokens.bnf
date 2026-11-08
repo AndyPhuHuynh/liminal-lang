@@ -32,6 +32,7 @@ REF_CONST    ::= "ref_const"
 RETURN       ::= "return"
 STRUCT       ::= "struct"
 TRUE         ::= "true"
+TRY          ::= "try"
 TUPLE        ::= "tuple"
 TYPE         ::= "type"
 UNDEFINED    ::= "undefined"
@@ -68,14 +69,15 @@ VOID   ::= "void"
 # --------------------------------
 # Punctuation
 # --------------------------------
-AT_ALIGN_OF ::= "@align_of"
-AT_ALIGN_AS ::= "@align_as"
-AT_CAST     ::= "@cast"
-AT_ENUM     ::= "@enum"
-AT_IMPORT   ::= "@import"
-AT_INLINE   ::= "@inline"
-AT_SIZE_OF  ::= "@size_of"
-AT_TUPLE    ::= "@tuple"
+AT_ALIGN_OF  ::= "@align_of"
+AT_ALIGN_AS  ::= "@align_as"
+AT_ANY_ERROR ::= "@any_error"
+AT_CAST      ::= "@cast"
+AT_ENUM      ::= "@enum"
+AT_IMPORT    ::= "@import"
+AT_INLINE    ::= "@inline"
+AT_SIZE_OF   ::= "@size_of"
+AT_TUPLE     ::= "@tuple"
 
 # --------------------------------
 # Punctuation
