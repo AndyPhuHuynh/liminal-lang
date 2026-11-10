@@ -5,7 +5,7 @@
 # ------------------------
 # --- Compilation Unit ---
 # ------------------------
-compilationUnit ::= { importStatement } { declaration }
+compilationUnit ::= { importStatement } { declaration | implStatement }
 
 importStatement ::= CONST IDENTIFIER EQ AT_IMPORT LEFT_PAREN EXPRESSION RIGHT_PAREN SEMI
 
@@ -23,6 +23,8 @@ deferStatement ::= DEFER blockStatement SEMI
 emptyStatement ::= SEMI
 
 expressionStatement ::= expression SEMI
+
+implStatement ::= IMPL genericExpression expression LEFT_BRACE declaration { declaration } RIGHT_BRACE
 
 returnStatement ::= RETURN expression SEMI
 
@@ -53,6 +55,7 @@ statement ::= breakStatement
             | continueStatement
             | emptyStatement
             | expressionStatement
+            | implStatement
             | loopStatement
             | returnStatement
             | varDecl 
@@ -277,6 +280,7 @@ rawTypeExpression ::= intrinsicTypeExpression
                     | structTypeExpression
                     | tupleTypeExpression
                     | AT_ANY_ERROR
+                    | AT_THIS
 
 # -------------
 # --- DECL ---
