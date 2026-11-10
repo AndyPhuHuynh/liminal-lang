@@ -5,9 +5,9 @@
 # ------------------------
 # --- Compilation Unit ---
 # ------------------------
-compilationUnit ::= { importStatement } { declaration | implStatement }
+compilationUnit ::= [ moduleDeclaration ] { declaration | implStatement }
 
-importStatement ::= CONST IDENTIFIER EQ AT_IMPORT LEFT_PAREN EXPRESSION RIGHT_PAREN SEMI
+moduleDeclaration ::= MODULE [ genericExpression ] IDENTIFIER SEMI
 
 # -----------------
 # --- Statement ---
@@ -24,7 +24,7 @@ emptyStatement ::= SEMI
 
 expressionStatement ::= expression SEMI
 
-implStatement ::= IMPL genericExpression expression LEFT_BRACE declaration { declaration } RIGHT_BRACE
+implStatement ::= IMPL genericExpression expression LEFT_BRACE declaration { declaration | implStatement } RIGHT_BRACE
 
 returnStatement ::= RETURN expression SEMI
 
@@ -149,6 +149,8 @@ castExpression ::= AT_CAST LEFT_PAREN expression COMMA expression [ COMMA ] RIGH
 
 complementExpression ::= TILDE unaryExpression
 
+importExpression ::= AT_IMPORT LEFT_PAREN expression [ COMMA ] RIGHT_PAREN
+
 negationExpression ::= MINUS unaryExpression
 
 notExpression ::= BANG unaryExpression
@@ -161,7 +163,9 @@ preFixRangeExpression ::= ( RANGE_LESS | RANGE_EQ ) unaryExpression
 
 unaryExpression (2) ::= postFixExpression
                       | alignExpression
+                      | castExpression
                       | complementExpression
+                      | importExpression
                       | negationExpression
                       | notExpression
                       | sizeOfExpression
