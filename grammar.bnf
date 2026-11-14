@@ -123,7 +123,7 @@ functionCallExprInline    ::= postFixExpression AT_INLINE functionCallParamList
 
 fieldAccessExpression ::= postFixExpression DOT IDENTIFIER
 
-indexExpression ::= postFixExpression LEFT_BRACKET expression RIGHT_BRACKET
+indexExpression ::= postFixExpression LEFT_BRACKET expression { COMMA expression } [ COMMA ]  RIGHT_BRACKET
 
 referenceExpression ::= postFixExpression DOT ( REF_VAR | REF_CONST )
 
@@ -268,7 +268,7 @@ functionTypeExpression ::= FN LEFT_PAREN [ functionTypeParameters ] RIGHT_PAREN 
 
 pointerTypeExpression ::= ( PTR_VAR | PTR_CONST ) expression
 
-arrayTypeExpression ::= LEFT_BRACKET [ expression ] RIGHT_BRACKET expression
+arrayTypeExpression ::= LEFT_BRACKET [ expression { COMMA expression } [ COMMA ] ] RIGHT_BRACKET expression
 
 referenceTypeExpression ::= ( REF_VAR | REF_CONST ) expression
 
