@@ -24,7 +24,7 @@ emptyStatement ::= SEMI
 
 expressionStatement ::= expression SEMI
 
-implStatement ::= IMPL genericExpression expression LEFT_BRACE declaration { declaration | implStatement } RIGHT_BRACE
+implStatement ::= IMPL genericExpression expression [ MATCH_ARROW expression ] LEFT_BRACE declaration { declaration | implStatement } RIGHT_BRACE
 
 returnStatement ::= RETURN expression SEMI
 
@@ -251,6 +251,8 @@ enumTypeExpression ::= ENUM [ LEFT_PAREN ERROR RIGHT_PAREN ] LEFT_BRACE enumMemb
 flagMember         ::= IDENTIFIER EQ expression
 flagTypeExpression ::= FLAG [ LEFT_PAREN expression RIGHT_PAREN ] LEFT_BRACE flagMember { COMMA flagMember } [ COMMA ] RIGHT_BRACE
 
+interfaceTypeExpression ::= INTERFACE LEFT_BRACE declaration { declaration } RIGHT_BRACE 
+
 structMember         ::= [ PUB ] IDENTIFIER COLON expression [ alignmentDecl ]
 structTypeExpression ::= ( STRUCT [ alignmentDecl ] LEFT_BRACE RIGHT_BRACE )
                        | ( STRUCT [ alignmentDecl ] LEFT_BRACE 
@@ -277,6 +279,7 @@ rawTypeExpression ::= intrinsicTypeExpression
                     | functionTypeExpression
                     | enumTypeExpression
                     | flagTypeExpression
+                    | interfaceTypeExpression
                     | structTypeExpression
                     | tupleTypeExpression
                     | AT_ANY_ERROR
