@@ -100,18 +100,18 @@ structInitExpression ::= structInitEmpty | structInitNonEmpty
 
 tupleInitExpression ::= AT_TUPLE LEFT_PAREN expression { COMMA expression } [ COMMA ] RIGHT_PAREN
 
-baseExpression (0) ::= blockExpression
-                     | functionExpression
-                     | valueExpression
-                     | ifExpression
-                     | matchExpression
-                     | parExpression
-                     | arrayInitExpression
-                     | enumInitExpression
-                     | flagInitExpression
-                     | structInitExpression
-                     | tupleInitExpression
-                     | rawTypeExpression
+baseExpression ::= blockExpression
+                 | functionExpression
+                 | valueExpression
+                 | ifExpression
+                 | matchExpression
+                 | parExpression
+                 | arrayInitExpression
+                 | enumInitExpression
+                 | flagInitExpression
+                 | structInitExpression
+                 | tupleInitExpression
+                 | rawTypeExpression
 
 addressExpression ::= postFixExpression DOT ( PTR_VAR | PTR_CONST )
 
@@ -133,15 +133,15 @@ genericResolutionExpression ::= postFixExpression COLON_COLON LESS expression { 
 
 postFixRangeExpression ::= postFixExpression RANGE_NO 
 
-postFixExpression (1) ::= addressExpression
-                        | baseExpression
-                        | dereferenceExpression
-                        | functionCallExpression
-                        | fieldAccessExpression
-                        | genericResolutionExpression
-                        | indexExpression
-                        | referenceExpression
-                        | scopeResolutionExpression
+postFixExpression ::= addressExpression
+                    | baseExpression
+                    | dereferenceExpression
+                    | functionCallExpression
+                    | fieldAccessExpression
+                    | genericResolutionExpression
+                    | indexExpression
+                    | referenceExpression
+                    | scopeResolutionExpression
 
 alignExpression ::= AT_ALIGN_OF LEFT_PAREN unaryExpression [ COMMA ] RIGHT_PAREN
 
@@ -161,68 +161,64 @@ tryExpression ::= TRY unaryExpression
 
 preFixRangeExpression ::= ( RANGE_LESS | RANGE_EQ ) unaryExpression 
 
-unaryExpression (2) ::= postFixExpression
-                      | alignExpression
-                      | castExpression
-                      | complementExpression
-                      | importExpression
-                      | negationExpression
-                      | notExpression
-                      | sizeOfExpression
-                      | tryExpression
-                      | preFixRangeExpression
+unaryExpression ::= postFixExpression
+                  | alignExpression
+                  | castExpression
+                  | complementExpression
+                  | importExpression
+                  | negationExpression
+                  | notExpression
+                  | sizeOfExpression
+                  | tryExpression
+                  | preFixRangeExpression
 
-rangeExpression (3) ::= unaryExpression 
-                      | rangeExpression ( RANGE_LESS | RANGE_EQ ) unaryExpression 
+rangeExpression ::= unaryExpression 
+                  | rangeExpression ( RANGE_LESS | RANGE_EQ ) unaryExpression 
 
-exponentExpression (4) ::= rangeExpression
-                         | exponentExpression STAR_STAR rangeExpression
+multiplicativeExpression ::= rangeExpression
+                           | multiplicativeExpression STAR rangeExpression
+                           | multiplicativeExpression SLASH rangeExpression
+                           | multiplicativeExpression PERCENT rangeExpression
 
-multiplicativeExpression (5) ::= exponentExpression
-                               | multiplicativeExpression STAR exponentExpression
-                               | multiplicativeExpression SLASH exponentExpression
-                               | multiplicativeExpression PERCENT exponentExpression
+additiveExpression ::= multiplicativeExpression
+                     | additiveExpression PLUS multiplicativeExpression 
+                     | additiveExpression MINUS multiplicativeExpression
 
-additiveExpression (6) ::= multiplicativeExpression
-                         | additiveExpression PLUS multiplicativeExpression 
-                         | additiveExpression MINUS multiplicativeExpression
+shiftExpression ::= additiveExpression
+                  | shiftExpression LEFT_SHIFT additiveExpression
+                  | shiftExpression RIGHT_SHIFT additiveExpression
 
-shiftExpression (7) ::= additiveExpression
-                      | shiftExpression LEFT_SHIFT additiveExpression
-                      | shiftExpression RIGHT_SHIFT additiveExpression
+relationalExpression ::= shiftExpression
+                       | relationalExpression LESS shiftExpression
+                       | relationalExpression LESS_EQ shiftExpression
+                       | relationalExpression GREATER shiftExpression
+                       | relationalExpression GREATER_EQ shiftExpression
 
-relationalExpression (8) ::= shiftExpression
-                           | relationalExpression LESS shiftExpression
-                           | relationalExpression LESS_EQ shiftExpression
-                           | relationalExpression GREATER shiftExpression
-                           | relationalExpression GREATER_EQ shiftExpression
+equalityExpression ::= relationalExpression
+                     | equalityExpression EQ_EQ relationalExpression
+                     | equalityExpression BANG_EQ relationalExpression
 
-equalityExpression (9) ::= relationalExpression
-                         | equalityExpression EQ_EQ relationalExpression
-                         | equalityExpression BANG_EQ relationalExpression
+bitwiseAndExpression ::= equalityExpression
+                       | bitwiseAndExpression AMPERSAND equalityExpression
 
-bitwiseAndExpression (10) ::= equalityExpression
-                            | bitwiseAndExpression AMPERSAND equalityExpression
+bitwiseXORExpression ::= bitwiseAndExpression
+                       | bitwiseXORExpression CARET bitwiseAndExpression
 
-bitwiseXORExpression (11) ::= bitwiseAndExpression
-                            | bitwiseXORExpression CARET bitwiseAndExpression
+bitwiseOrExpression ::= bitwiseXORExpression
+                      | bitwiseOrExpression PIPE bitwiseXORExpression
 
-bitwiseOrExpression (12) ::= bitwiseXORExpression
-                           | bitwiseOrExpression PIPE bitwiseXORExpression
+logicalAndExpression ::= bitwiseOrExpression
+                       | logicalAndExpression AND bitwiseOrExpression
 
-logicalAndExpression (13) ::= bitwiseOrExpression
-                            | logicalAndExpression AND bitwiseOrExpression
+logicalOrExpression ::= logicalAndExpression
+                      | logicalOrExpression OR logicalAndExpression
 
-logicalOrExpression (14) ::= logicalAndExpression
-                           | logicalOrExpression OR logicalAndExpression
-
-errorUnionExpression (15) ::= logicalOrExpression
-                            | errorUnionExpression BANG logicalOrExpression
+errorUnionExpression ::= logicalOrExpression
+                       | errorUnionExpression BANG logicalOrExpression
 
 assignmentOperator ::= PLUS_EQ
                        MINUS_EQ
                        STAR_EQ
-                       STAR_STAR_EQ
                        SLASH_EQ
                        PERCENT_EQ
                        CARET_EQ
@@ -233,7 +229,7 @@ assignmentOperator ::= PLUS_EQ
                        RIGHT_SHIFT_EQ
                        EQ
 
-assignmentExpression (16) ::= errorUnionExpression assignmentOperator expression # All assignments return void.         
+assignmentExpression ::= errorUnionExpression assignmentOperator expression # All assignments return void.         
 
 expression ::= assignmentExpression
 
