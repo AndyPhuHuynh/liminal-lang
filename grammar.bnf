@@ -98,14 +98,13 @@ structInitEmpty      ::= IDENTIFIER LEFT_BRACE RIGHT_BRACE
 structInitNonEmpty   ::= IDENTIFIER structInitMembers
 structInitExpression ::= structInitEmpty | structInitNonEmpty
 
-tupleInitExpression ::= AT_TUPLE LEFT_PAREN expression { COMMA expression } [ COMMA ] RIGHT_PAREN
+tupleInitExpression ::= LEFT_PAREN expression { COMMA expression } [ COMMA ] RIGHT_PAREN
 
 baseExpression ::= blockExpression
                  | functionExpression
                  | valueExpression
                  | ifExpression
                  | matchExpression
-                 | parExpression
                  | arrayInitExpression
                  | enumInitExpression
                  | flagInitExpression
